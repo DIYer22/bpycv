@@ -8,8 +8,9 @@
  - [x] render depth
  - [x] render annotations for instance segmentation and panoptic segmentation 
  - [x] to cityscape format
- - [ ] to coco format
+ - [ ] generate 6DoF GT
  - [ ] pre-define domain randomization
+ - [ ] to coco format
 
 ## Install
 `bpycv` support Blender 2.8+
@@ -74,3 +75,10 @@ Open `./demo-vis(inst|rgb|depth).jpg`:
 
 ## Tips
  * Right now (Blender 2.81), using Eevee engine will raise Exception("Unable to open a display") when the enviroment not support GUI.
+
+<br>
+<br>
+<div align="center">
+
+**[suggestion](https://github.com/DIYer22/bpycv/issues) and pull request are welcome** 😊
+</div>
