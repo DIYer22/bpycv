@@ -15,15 +15,15 @@ import bpy
 
 with inpkg():
     from .select_utils import scene, render
-    from .statu_manager import StatuManager
+    from .statu_recover import StatuRecover
 
     from .exr_image_parser import parser_exr, ImageWithAnnotation
     from .material_utils import set_inst_map_material
 
 
-class set_inst_map_render(StatuManager):
+class set_inst_map_render(StatuRecover):
     def __init__(self):
-        StatuManager.__init__(self)
+        StatuRecover.__init__(self)
         self.set_attr(render, "engine", "BLENDER_EEVEE")
         self.set_attr(scene.eevee, "taa_render_samples", 1)
         self.set_attr(scene.eevee, "use_bloom", False)
@@ -36,12 +36,11 @@ class set_inst_map_render(StatuManager):
         self.set_attrs(render.image_settings, attrs)
 
 
-class set_cycle_render(StatuManager):
+class set_cycle_render(StatuRecover):
     def __init__(self, eevee=False):
-        StatuManager.__init__(self)
+        StatuRecover.__init__(self)
         self.set_attr(render, "engine", "BLENDER_EEVEE" if eevee else "CYCLES")
         self.set_attr(scene.cycles, "samples", 128)
-        self.set_attr(render, "engine", "BLENDER_EEVEE")
         attrs = dict(file_format="PNG", compression=15)
         self.set_attrs(render.image_settings, attrs)
         # render.image_settings.file_format = 'JPEG'

@@ -10,7 +10,7 @@ from boxx import *
 from boxx import tree
 
 
-class StatuManager:
+class StatuRecover:
     def __init__(self):
         self.obj_to_old_attr_value = []
         self.obj_to_old_bpy_prop_collection = {}
@@ -19,6 +19,9 @@ class StatuManager:
         return self
 
     def __exit__(self, typee, value, traceback):
+        self.recover_statu()
+    
+    def recover_statu(self):
         for (obj, attr), value in self.obj_to_old_attr_value[
             ::-1
         ]:  # try avoid TypeError

@@ -12,13 +12,13 @@ from boxx import inpkg
 import bpy
 
 with inpkg():
-    from .statu_manager import StatuManager
+    from .statu_recover import StatuRecover
     from .utils import encode_inst_id
 
 
-class set_inst_map_material(StatuManager):
+class set_inst_map_material(StatuRecover):
     def __init__(self):
-        StatuManager.__init__(self)
+        StatuRecover.__init__(self)
 
         self.set_attr(bpy.data.worlds[0], "use_nodes", False)
         objs = [obj for obj in bpy.data.objects if obj.type == "MESH"]
