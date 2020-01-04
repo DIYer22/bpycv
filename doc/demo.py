@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""
+Notice: When update demo.py: 
+    1. Update README.md
+    2. @diyer22 update the answer on stackexchange:
+            https://blender.stackexchange.com/a/162746/86396 
+"""
+
 import cv2
 import bpy
 import bpycv
@@ -21,12 +28,13 @@ for inst_id in range(1, 20):
     obj["inst_id"] = inst_id
 
 # render image, instance annoatation and depth in one line code
-result = bpycv.render_data(eevee=True)
+result = bpycv.render_data()
 
 # save result
-cv2.imwrite("demo-depth.png", result["depth"])
-cv2.imwrite("demo-inst.png", result["inst"])
 cv2.imwrite("demo-rgb.jpg", result["image"])
+cv2.imwrite("demo-inst.png", result["inst"])
+# normalizing depth
+cv2.imwrite("demo-depth.png", result["depth"] / result["depth"].max() * 255)
 
 # visualization inst|rgb|depth for human
 cv2.imwrite("demo-vis(inst|rgb|depth).jpg", result.vis())

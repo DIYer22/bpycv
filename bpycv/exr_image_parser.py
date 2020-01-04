@@ -98,7 +98,7 @@ def test_parser_exr(exr_path="../tmp_exrs/cycles.exr"):
 
 
 if __name__ == "__main__":
-    from boxx import show, timeit, mg
+    from boxx import show, imread
 
     exr_path = "tmp_exr.exr"
     exr_path = "../tmp_exrs/untitled.exr"
@@ -109,5 +109,4 @@ if __name__ == "__main__":
 
     ann = ImageWithAnnotation(png, exr)
     vis = ann.vis()
-
     show - vis

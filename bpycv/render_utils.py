@@ -8,6 +8,7 @@ Created on Sat Dec 28 21:33:28 2019
 
 from boxx import *
 from boxx import inpkg, os, pathjoin, withattr, imread, timeit
+from boxx import sysi
 
 import tempfile
 import time
@@ -18,15 +19,25 @@ with inpkg():
     from .statu_recover import StatuRecover
 
     from .exr_image_parser import parser_exr, ImageWithAnnotation
-    from .material_utils import set_inst_map_material
+    from .material_utils import set_inst_material
 
 
-class set_inst_map_render(StatuRecover):
+class set_annotation_render(StatuRecover):
     def __init__(self):
         StatuRecover.__init__(self)
-        self.set_attr(render, "engine", "BLENDER_EEVEE")
-        self.set_attr(scene.eevee, "taa_render_samples", 1)
-        self.set_attr(scene.eevee, "use_bloom", False)
+        if sysi.gui:  # mean "does the enviroment support GUI".
+            # When enviroment not support GUI, Eevee will raise Exception("Unable to open a display")  (@Blender 2.81)
+            self.set_attr(render, "engine", "BLENDER_EEVEE")
+            self.set_attr(scene.eevee, "taa_render_samples", 1)
+            self.set_attr(scene.eevee, "use_bloom", False)
+        else:
+            self.set_attr(render, "engine", "CYCLES")
+            self.set_attr(scene.cycles, "samples", 1)
+
+        self.set_attr(scene.render, "use_motion_blur", False)
+        self.set_attr(scene.render, "tile_x", 256)
+        self.set_attr(scene.render, "tile_y", 256)
+
         attrs = dict(
             file_format="OPEN_EXR",
             color_mode="RGBA",
@@ -36,30 +47,30 @@ class set_inst_map_render(StatuRecover):
         self.set_attrs(render.image_settings, attrs)
 
 
-class set_cycle_render(StatuRecover):
-    def __init__(self, eevee=False):
+class set_image_render(StatuRecover):
+    def __init__(self):
         StatuRecover.__init__(self)
-        self.set_attr(render, "engine", "BLENDER_EEVEE" if eevee else "CYCLES")
-        self.set_attr(scene.cycles, "samples", 128)
+        # self.set_attr(render, "engine", "BLENDER_EEVEE" if eevee else "CYCLES")
+        # self.set_attr(scene.cycles, "samples", 128)
         attrs = dict(file_format="PNG", compression=15)
         self.set_attrs(render.image_settings, attrs)
         # render.image_settings.file_format = 'JPEG'
         # render.image_settings.quality = 100
 
 
-def render_data(render_image=True, render_annotation=True, eevee=False):
+def render_data(render_image=True, render_annotation=True):
     path = pathjoin(tempfile.gettempdir(), "render_" + str(time.time()))
     render_result = {}
     if render_image:
         png_path = path + ".png"
-        with set_cycle_render(eevee=eevee), withattr(render, "filepath", png_path):
+        with set_image_render(), withattr(render, "filepath", png_path):
             bpy.ops.render.render(write_still=True)
         render_result["image"] = imread(png_path)
         os.remove(png_path)
 
     if render_annotation:
         exr_path = path + ".exr"
-        with set_inst_map_material(), set_inst_map_render(), withattr(
+        with set_inst_material(), set_annotation_render(), withattr(
             render, "filepath", exr_path
         ):
             bpy.ops.render.render(write_still=True)

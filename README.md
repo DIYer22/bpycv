@@ -3,18 +3,6 @@
 ![demo-vis(inst|rgb|depth).jpg](doc/img/demo-vis(inst|rgb|depth).jpg)    
 *render instance annoatation, RGB image and depth in one line code*
 
-## Install
-Support Blender 2.8+
-
-Example for Blender 2.81:
-```shell
-cd <path to blender>/2.81/python/bin
-./python3.7m -m ensurepip  # get pip
-./python3.7m -m pip install --upgrade pip setuptools wheel
-./python3.7m -m pip install bpycv opencv-python
-```
-
-
 ## Features
 
  - [x] render depth
@@ -22,6 +10,28 @@ cd <path to blender>/2.81/python/bin
  - [x] to cityscape format
  - [ ] to coco format
  - [ ] pre-define domain randomization
+
+## Install
+`bpycv` support Blender 2.8+
+
+### 1. install OpenExr
+`bpycv` use OpenExr to extract depth map from Blender
+
+For a Debian-based Linux(Ubuntu):
+```bash
+sudo apt-get install libopenexr-dev
+```
+
+For other OS, please follow [OpenExr's instruction](https://excamera.com/sphinx/articles-openexr.html).
+
+### 2. install python package
+Example for Blender 2.81:
+```bash
+cd <path to blender>/2.81/python/bin
+./python3.7m -m ensurepip  # get pip
+./python3.7m -m pip install --upgrade pip setuptools wheel
+./python3.7m -m pip install bpycv opencv-python
+```
 
 ## Fast Demo
 
@@ -47,15 +57,20 @@ for inst_id in range(1, 20):
     obj["inst_id"] = inst_id
 
 # render image, instance annoatation and depth in one line code
-result = bpycv.render_data(eevee=True)
+result = bpycv.render_data()
 
 # save result
-cv2.imwrite("demo-depth.png", result["depth"])
-cv2.imwrite("demo-inst.png", result["inst"])
 cv2.imwrite("demo-rgb.jpg", result["image"])
+cv2.imwrite("demo-inst.png", result["inst"])
+# normalizing depth
+cv2.imwrite("demo-depth.png", result["depth"] / result["depth"].max() * 255)
 
 # visualization inst|rgb|depth for human
 cv2.imwrite("demo-vis(inst|rgb|depth).jpg", result.vis())
 ```
-Open `demo-vis(inst|rgb|depth).jpg`:   
+Open `./demo-vis(inst|rgb|depth).jpg`:   
+
 ![demo-vis(inst|rgb|depth).jpg](doc/img/demo-vis(inst|rgb|depth).jpg)
+
+## Tips
+ * Right now (Blender 2.81), using Eevee engine will raise Exception("Unable to open a display") when the enviroment not support GUI.

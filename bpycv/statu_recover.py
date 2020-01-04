@@ -20,7 +20,7 @@ class StatuRecover:
 
     def __exit__(self, typee, value, traceback):
         self.recover_statu()
-    
+
     def recover_statu(self):
         for (obj, attr), value in self.obj_to_old_attr_value[
             ::-1
@@ -30,7 +30,7 @@ class StatuRecover:
             except TypeError as e:
                 tree - (obj, attr, value)
                 print(
-                    "Maybe, This value is invalide for other attr, try change order of self.set_attr"
+                    "Maybe, This value is invalide for other attr, try change order of self.set_attr() in the code"
                 )
                 raise e
         for (

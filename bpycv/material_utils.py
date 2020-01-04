@@ -16,14 +16,14 @@ with inpkg():
     from .utils import encode_inst_id
 
 
-class set_inst_map_material(StatuRecover):
+class set_inst_material(StatuRecover):
     def __init__(self):
         StatuRecover.__init__(self)
 
         self.set_attr(bpy.data.worlds[0], "use_nodes", False)
         objs = [obj for obj in bpy.data.objects if obj.type == "MESH"]
         for obj_idx, obj in enumerate(objs):
-            material_name = "auto.inst_map_material." + obj.name
+            material_name = "auto.inst_material." + obj.name
             material = bpy.data.materials.new(material_name)
             material["is_auto"] = True
             material.use_nodes = True
@@ -34,7 +34,7 @@ class set_inst_map_material(StatuRecover):
                 emission_node.outputs["Emission"], output_node.inputs[0]
             )
             if "inst_id" in obj:
-                inst_id = obj["inst_id"] + 1
+                inst_id = obj["inst_id"]
             else:
                 inst_id = -1  # -1 as default inst_id
             color = tuple(encode_inst_id.id_to_rgb(inst_id))
