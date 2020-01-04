@@ -19,12 +19,16 @@ class StatuManager:
         return self
 
     def __exit__(self, typee, value, traceback):
-        for (obj, attr), value in self.obj_to_old_attr_value[::-1]: # try avoid TypeError
+        for (obj, attr), value in self.obj_to_old_attr_value[
+            ::-1
+        ]:  # try avoid TypeError
             try:
                 setattr(obj, attr, value)
             except TypeError as e:
                 tree - (obj, attr, value)
-                print("May this value are invalide for other attr, you try change order of self.set_attr")
+                print(
+                    "Maybe, This value is invalide for other attr, try change order of self.set_attr"
+                )
                 raise e
         for (
             bpy_path,

@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 """
 bpycv: computer vision utils for Blender
 """
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 __short_description__ = "Computer vision utils for Blender."
 __license__ = "MIT"
 __author__ = "DIYer22"

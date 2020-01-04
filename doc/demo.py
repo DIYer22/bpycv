@@ -1,38 +1,32 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-@author: DIYer22@github
-@mail: ylxx@live.com
-Created on Fri Jan  3 21:44:02 2020
-"""
 
 import cv2
 import bpy
+import bpycv
 import random
 
-from bpycv import render_data
-
-[bpy.data.objects.remove(obj) for obj in bpy.data.objects if obj.type=="MESH"]
+# remove all MESH objects
+[bpy.data.objects.remove(obj) for obj in bpy.data.objects if obj.type == "MESH"]
 
 for inst_id in range(1, 20):
-    location = [random.random()* 4 - 2 for _ in range(3)]
+    # create cube and sphere as instance at random location
+    location = [random.random() * 4 - 2 for _ in range(3)]
     if inst_id % 2:
-        bpy.ops.mesh.primitive_uv_sphere_add(radius=0.5, location=location)
-    else:
         bpy.ops.mesh.primitive_cube_add(size=0.5, location=location)
+    else:
+        bpy.ops.mesh.primitive_uv_sphere_add(radius=0.5, location=location)
     obj = bpy.context.active_object
-    obj[inst_id] = inst_id
+    # set each instance a unique inst_id, which is used to generate instance annotation.
+    obj["inst_id"] = inst_id
 
-result = render_data(eevee=True)
-cv2.imsave("demo.png", result["depth"])
-cv2.imsave("demo.tif", result["inst"])
-cv2.imsave("demo.jpg", result["image"])
+# render image, instance annoatation and depth in one line code
+result = bpycv.render_data(eevee=True)
 
-    
+# save result
+cv2.imwrite("demo-depth.png", result["depth"])
+cv2.imwrite("demo-inst.png", result["inst"])
+cv2.imwrite("demo-rgb.jpg", result["image"])
 
-
-if __name__ == "__main__":
-    pass
-    
-    
-    
+# visualization inst|rgb|depth for human
+cv2.imwrite("demo-vis(inst|rgb|depth).jpg", result.vis())
