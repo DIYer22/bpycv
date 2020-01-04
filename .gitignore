@@ -1,0 +1,14 @@
+﻿tmp_*
+
+*.exr
+
+# Python:
+*.py[cod]
+*.so
+*.egg
+*.egg-info
+dist
+build
+.ipynb_checkpoints
+*.py.bak
+*.ignore.*

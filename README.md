@@ -1,4 +1,9 @@
-# bpycv: computer vision utils for Blender
+# `bpycv`: computer vision utils for Blender
+
+## Install
+`pip install bpycv`
+
+Support Blender 2.8+
 
 ## Features
 
