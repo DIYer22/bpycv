@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 """
 bpycv: computer vision utils for Blender
 """
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __short_description__ = "Computer vision utils for Blender."
 __license__ = "MIT"
 __author__ = "DIYer22"
@@ -22,3 +22,4 @@ from .select_utils import bpy, scene, render, get_objdf
 from .object_utils import activate_obj, remove_obj
 from .material_utils import set_inst_material
 from .render_utils import set_image_render, set_annotation_render, render_data
+from .pose_utils import get_6dof_pose

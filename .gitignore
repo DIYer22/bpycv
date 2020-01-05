@@ -12,3 +12,11 @@ build
 .ipynb_checkpoints
 *.py.bak
 *.ignore.*
+
+doc/demo-depth\.png
+
+doc/demo-inst\.png
+
+doc/demo-rgb\.jpg
+
+doc/demo-vis\(inst\|rgb\|depth\)\.jpg

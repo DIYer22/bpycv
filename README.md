@@ -7,9 +7,9 @@
 
  - [x] render depth
  - [x] render annotations for instance segmentation and panoptic segmentation 
+ - [x] generate 6DoF pose GT
  - [x] one line code generats all of the above
  - [x] to cityscape format
- - [ ] generate 6DoF GT
  - [ ] pre-define domain randomization
  - [ ] to coco format
 
@@ -59,6 +59,7 @@ for inst_id in range(1, 20):
     obj["inst_id"] = inst_id
 
 # render image, instance annoatation and depth in one line code
+# result["ycb_meta"] is 6d pose GT
 result = bpycv.render_data()
 
 # save result
