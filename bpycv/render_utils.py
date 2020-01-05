@@ -64,6 +64,7 @@ def render_data(render_image=True, render_annotation=True):
     if render_image:
         png_path = path + ".png"
         with set_image_render(), withattr(render, "filepath", png_path):
+            print("Render image using:", render.engine)
             bpy.ops.render.render(write_still=True)
         render_result["image"] = imread(png_path)
         os.remove(png_path)
@@ -73,6 +74,7 @@ def render_data(render_image=True, render_annotation=True):
         with set_inst_material(), set_annotation_render(), withattr(
             render, "filepath", exr_path
         ):
+            print("Render annotation using:", render.engine)
             bpy.ops.render.render(write_still=True)
         render_result["exr"] = parser_exr(exr_path)
         os.remove(exr_path)

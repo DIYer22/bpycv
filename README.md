@@ -3,19 +3,20 @@
 ![demo-vis(inst|rgb|depth).jpg](doc/img/demo-vis(inst|rgb|depth).jpg)    
 *render instance annoatation, RGB image and depth in one line code*
 
-## Features
+## ▮ Features
 
  - [x] render depth
  - [x] render annotations for instance segmentation and panoptic segmentation 
+ - [x] one line code generats all of the above
  - [x] to cityscape format
  - [ ] generate 6DoF GT
  - [ ] pre-define domain randomization
  - [ ] to coco format
 
-## Install
+## ▮ Install
 `bpycv` support Blender 2.8+
 
-### 1. install OpenExr
+#### 1. Install OpenExr
 `bpycv` use OpenExr to extract depth map from Blender
 
 For a Debian-based Linux(Ubuntu):
@@ -25,7 +26,7 @@ sudo apt-get install libopenexr-dev
 
 For other OS, please follow [OpenExr's instruction](https://excamera.com/sphinx/articles-openexr.html).
 
-### 2. install python package
+#### 2. Install python package
 Example for Blender 2.81:
 ```bash
 cd <path to blender>/2.81/python/bin
@@ -34,7 +35,7 @@ cd <path to blender>/2.81/python/bin
 ./python3.7m -m pip install bpycv opencv-python
 ```
 
-## Fast Demo
+## ▮ Fast Demo
 
 Copy-paste this code to `Text Editor` and click `Run Script` button(or `Alt+P`)
 ```python
@@ -73,7 +74,7 @@ Open `./demo-vis(inst|rgb|depth).jpg`:
 
 ![demo-vis(inst|rgb|depth).jpg](doc/img/demo-vis(inst|rgb|depth).jpg)
 
-## Tips
+## ▮ Tips
  * Right now (Blender 2.81), using Eevee engine will raise Exception("Unable to open a display") when the enviroment not support GUI.
 
 <br>
