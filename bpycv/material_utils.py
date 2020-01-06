@@ -7,13 +7,11 @@ Created on Sat Dec 28 21:38:05 2019
 """
 
 from boxx import *
-from boxx import inpkg
 
 import bpy
 
-with inpkg():
-    from .statu_recover import StatuRecover
-    from .utils import encode_inst_id
+from .statu_recover import StatuRecover
+from .utils import encode_inst_id
 
 
 class set_inst_material(StatuRecover):

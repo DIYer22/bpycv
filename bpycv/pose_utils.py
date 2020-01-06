@@ -129,7 +129,7 @@ def get_6dof_pose(camera, objs, inst=None):
         meta["6ds"].append(pose)
 
     meta["poses"] = np.concatenate(meta["poses"], -1)
-    return meta
+    return dict(meta)
 
 
 if __name__ == "__main__":

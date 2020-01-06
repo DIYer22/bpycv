@@ -7,7 +7,6 @@ Created on Sat Dec 28 20:51:37 2019
 """
 
 from boxx import *
-from boxx import inpkg, pd
 
 import bpy
 

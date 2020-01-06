@@ -7,24 +7,23 @@ Created on Sat Dec 28 21:33:28 2019
 """
 
 from boxx import *
-from boxx import inpkg, os, pathjoin, withattr, imread, timeit
-from boxx import sysi
+from boxx import os, pathjoin, withattr, imread, sysi
 
-import tempfile
-import time
 import bpy
+import time
+import tempfile
 
-with inpkg():
-    from .select_utils import scene, render
-    from .statu_recover import StatuRecover
-    from .exr_image_parser import parser_exr, ImageWithAnnotation
-    from .material_utils import set_inst_material
-    from .pose_utils import get_6dof_pose
+from .select_utils import scene, render
+from .statu_recover import StatuRecover
+from .exr_image_parser import parser_exr, ImageWithAnnotation
+from .material_utils import set_inst_material
+from .pose_utils import get_6dof_pose
 
 
 class set_annotation_render(StatuRecover):
     def __init__(self):
         StatuRecover.__init__(self)
+        # TODO detect whether in ssh X11 forward
         if sysi.gui:  # mean "does the enviroment support GUI".
             # When enviroment not support GUI, Eevee will raise Exception("Unable to open a display")  (@Blender 2.81)
             self.set_attr(render, "engine", "BLENDER_EEVEE")

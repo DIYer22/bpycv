@@ -9,7 +9,6 @@ Created on Sat Dec 28 20:56:00 2019
 from boxx import *
 from boxx import pd
 
-
 import bpy
 
 objs = bpy.data.objects
