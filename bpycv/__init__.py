@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 """
 bpycv: computer vision utils for Blender
 """
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 __short_description__ = "Computer vision utils for Blender."
 __license__ = "MIT"
 __author__ = "DIYer22"
@@ -17,6 +17,7 @@ __github_url__ = "https://github.com/DIYer22/bpycv"
 __support__ = "https://github.com/DIYer22/bpycv/issues"
 
 
+from .utils import ipython
 from .exr_image_parser import parser_exr, ImageWithAnnotation
 from .select_utils import bpy, scene, render, get_objdf
 from .object_utils import activate_obj, remove_obj

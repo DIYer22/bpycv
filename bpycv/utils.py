@@ -38,5 +38,11 @@ class encode_inst_id:
             return np.int32(is_negative * int_part)
 
 
+def ipython():
+    import IPython
+
+    IPython.embed()
+
+
 if __name__ == "__main__":
     pass
