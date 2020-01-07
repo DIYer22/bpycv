@@ -28,12 +28,14 @@ def vis_pose(img, xyzs, pose, K, color=None):
     return img
 
 
-def vis_poses_by_meta(img, xyzs, meta):
+def vis_poses_by_meta(img, meta, xyzs=None):
     n = meta["poses"].shape[-1]
     colors = npa(getDefaultColorList(n + 3)) * 255
     for idx in range(n):
         pose = meta["poses"][:, :, idx]
         K = meta["intrinsic_matrix"]
+        if xyzs is None:
+            xyzs = meta.get("bound_boxs")[idx]
         img = vis_pose(img, xyzs, pose, K, colors[idx + 1])
     return img
 
@@ -64,8 +66,8 @@ cube_xyz_s = "111 110 101 011 100 010 001 000"
 cube_xyz = np.array(
     [[-cube_size / 2, cube_size / 2][int(s)] for s in cube_xyz_s if s in "01"]
 ).reshape(-1, 3)
-
-vis = vis_poses_by_meta(img, cube_xyz, meta)
+cube_xyz = None
+vis = vis_poses_by_meta(img, meta, cube_xyz)
 
 cv2.imwrite("demo-vis_6d_pose.jpg", vis)
 
