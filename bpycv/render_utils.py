@@ -24,15 +24,20 @@ class set_annotation_render(StatuRecover):
     def __init__(self):
         StatuRecover.__init__(self)
         # TODO detect whether in ssh X11 forward
-        if sysi.gui:  # mean "does the enviroment support GUI".
+        # if sysi.gui:  # mean "does the enviroment support GUI".
+        # self.set_attr(render, "engine", "BLENDER_EEVEE")
+        if render.engine == "BLENDER_EEVEE":
             # When enviroment not support GUI, Eevee will raise Exception("Unable to open a display")  (@Blender 2.81)
             self.set_attr(render, "engine", "BLENDER_EEVEE")
             self.set_attr(scene.eevee, "taa_render_samples", 1)
             self.set_attr(scene.eevee, "use_bloom", False)
-        else:
+        elif render.engine == "CYCLES":
             self.set_attr(render, "engine", "CYCLES")
             self.set_attr(scene.cycles, "samples", 1)
-
+            self.set_attr(
+                scene.view_layers["View Layer"].cycles, "use_denoising", False
+            )
+        self.set_attr(render, "film_transparent", True)
         self.set_attr(scene.render, "use_motion_blur", False)
         self.set_attr(scene.render, "tile_x", 256)
         self.set_attr(scene.render, "tile_y", 256)
