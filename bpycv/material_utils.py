@@ -12,6 +12,7 @@ import bpy
 
 from .statu_recover import StatuRecover
 from .utils import encode_inst_id
+from .node_graph import activate_node_tree, Node
 
 
 class set_inst_material(StatuRecover):
@@ -21,22 +22,22 @@ class set_inst_material(StatuRecover):
         self.set_attr(bpy.data.worlds[0], "use_nodes", False)
         objs = [obj for obj in bpy.data.objects if obj.type == "MESH"]
         for obj_idx, obj in enumerate(objs):
+            if "inst_id" in obj:
+                inst_id = obj["inst_id"]
+            else:
+                inst_id = -1  # -1 as default inst_id
+            color = tuple(encode_inst_id.id_to_rgb(inst_id)) + (1,)
+
             material_name = "auto.inst_material." + obj.name
             material = bpy.data.materials.new(material_name)
             material["is_auto"] = True
             material.use_nodes = True
             material.node_tree.nodes.clear()
-            output_node = material.node_tree.nodes.new("ShaderNodeOutputMaterial")
-            emission_node = material.node_tree.nodes.new("ShaderNodeEmission")
-            material.node_tree.links.new(
-                emission_node.outputs["Emission"], output_node.inputs[0]
-            )
-            if "inst_id" in obj:
-                inst_id = obj["inst_id"]
-            else:
-                inst_id = -1  # -1 as default inst_id
-            color = tuple(encode_inst_id.id_to_rgb(inst_id))
-            emission_node.inputs[0].default_value = color + (1,)
+            with activate_node_tree(material.node_tree):
+                Node("ShaderNodeOutputMaterial").Surface = Node(
+                    "ShaderNodeEmission", Color=color
+                ).Emission
+
             self.replace_collection(obj.data.materials, [material])
 
 
