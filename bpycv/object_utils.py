@@ -40,5 +40,28 @@ def remove_obj(obj_or_str):
     bpy.data.objects.remove(obj)
 
 
+class edit_mode:
+    def __init__(self, obj=None, mode="EDIT"):
+        self.obj = obj
+        self.mode = mode
+
+    def __enter__(self):
+        if self.obj is None:
+            self.obj = bpy.context.object
+        self.activate = activate_obj(self.obj)
+        self.activate.__enter__()
+        self.old_mode = self.obj.mode
+        bpy.ops.object.mode_set(mode=self.mode)
+
+    def __exit__(self, typee, value, traceback):
+        bpy.ops.object.mode_set(mode=self.old_mode)
+        self.activate.__exit__(typee, value, traceback)
+
+
+def subdivide(obj, number_cuts=2):
+    with edit_mode(obj):
+        bpy.ops.mesh.subdivide(number_cuts=number_cuts)
+
+
 if __name__ == "__main__":
     pass
