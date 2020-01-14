@@ -8,22 +8,19 @@ Created on Mon Jan 13 18:39:35 2020
 
 from boxx import *
 
-# bpy.data.worlds[0].node_tree.nodes["Environment Texture"].image=bpy.data.images.load("/home/dl/research/learning_from_exemplar/blender_syn/blender_content/hdri/fireplace_4k.hdr")
-
-
-activate_node_tree_stack = []
-
 
 class activate_node_tree:
+    activate_node_tree_stack = []
+
     def __init__(self, node_tree):
-        activate_node_tree_stack.append(node_tree)
+        self.activate_node_tree_stack.append(node_tree)
         self.node_tree = node_tree
 
     def __enter__(self):
         return self
 
     def __exit__(self, typee, value, traceback):
-        assert activate_node_tree_stack.pop() is self.node_tree
+        assert self.activate_node_tree_stack.pop() is self.node_tree
 
 
 def is_node_socket(obj):
@@ -46,10 +43,10 @@ class Node(object):
 
     def __init__(self, node, node_tree=None, **kv):
         assert len(
-            activate_node_tree_stack
+            activate_node_tree.activate_node_tree_stack
         ), "Node init must under `with activate_node_tree(node_tree):`"
         if node_tree is None:
-            node_tree = activate_node_tree_stack[-1]
+            node_tree = activate_node_tree.activate_node_tree_stack[-1]
         if isinstance(node, str):
             node = node_tree.nodes.new(node)
         self.node = node
