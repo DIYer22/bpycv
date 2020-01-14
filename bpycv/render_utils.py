@@ -14,7 +14,7 @@ import time
 import tempfile
 
 from .select_utils import scene, render
-from .statu_recover import StatuRecover
+from .statu_recover import StatuRecover, undo
 from .exr_image_parser import parser_exr, ImageWithAnnotation
 from .material_utils import set_inst_material
 from .pose_utils import get_6dof_pose
@@ -62,6 +62,7 @@ class set_image_render(StatuRecover):
         # render.image_settings.quality = 100
 
 
+@undo()
 def render_data(render_image=True, render_annotation=True):
     path = pathjoin(tempfile.gettempdir(), "render_" + str(time.time()))
     render_result = {}
