@@ -118,17 +118,18 @@ def get_6dof_pose(camera, objs, inst=None):
     meta["intrinsic_matrix"] = meta["K"]
     for obj in objs:
         inst_id = obj.get("inst_id", -1)
-        meta["inst_ids"].append(inst_id)
         area = inst_id_to_area(inst_id)
-        meta["areas"].append(area)
-        meta["visibles"].append(area != 0)
+        if area != 0:
+            meta["inst_ids"].append(inst_id)
+            meta["areas"].append(area)
+            meta["visibles"].append(area != 0)
 
-        world_to_camera_pose = np.append(meta["RT"], [[0, 0, 0, 1]], axis=0)
-        pose = np.dot(world_to_camera_pose, obj.matrix_world)[:3]
-        meta["poses"].append(pose[..., None])
-        meta["6ds"].append(pose)
-        bound_box = np.array([list(point) for point in obj.bound_box])
-        meta["bound_boxs"].append(bound_box)
+            world_to_camera_pose = np.append(meta["RT"], [[0, 0, 0, 1]], axis=0)
+            pose = np.dot(world_to_camera_pose, obj.matrix_world)[:3]
+            meta["poses"].append(pose[..., None])
+            meta["6ds"].append(pose)
+            bound_box = np.array([list(point) for point in obj.bound_box])
+            meta["bound_boxs"].append(bound_box)
 
     meta["poses"] = meta["poses"] and np.concatenate(meta["poses"], -1)
     return dict(meta)
