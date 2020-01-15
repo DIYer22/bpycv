@@ -1,9 +1,11 @@
 # `bpycv`: computer vision utils for Blender
 
-![demo-vis(inst|rgb|depth).jpg](doc/img/demo-vis(inst|rgb|depth).jpg)    
-*render instance annoatation, RGB image and depth in one line code*
+### Contents: [Features](#-features) | [Install](#-install) | [Fast Demo](#-fast-demo) | [Tips](#-tips) 
 
 ## ▮ Features
+
+![demo-vis(inst|rgb|depth).jpg](doc/img/demo-vis(inst|rgb|depth).jpg)    
+*render instance annoatation, RGB image and depth in one line code*
 
  - [x] render depth
  - [x] render annotations for instance segmentation and panoptic segmentation 
@@ -74,6 +76,11 @@ cv2.imwrite("demo-vis(inst|rgb|depth).jpg", result.vis())
 Open `./demo-vis(inst|rgb|depth).jpg`:   
 
 ![demo-vis(inst|rgb|depth).jpg](doc/img/demo-vis(inst|rgb|depth).jpg)
+
+
+#### Generat 6DoF Pose Demo
+
+Generate and visualize 6DoF pose GT: [example/6d_pose_demo.py](example/6d_pose_demo.py)
 
 ## ▮ Tips
  * Right now (Blender 2.81), using Eevee engine will raise Exception("Unable to open a display") when the enviroment not support GUI.
