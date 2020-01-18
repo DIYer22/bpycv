@@ -63,5 +63,15 @@ def subdivide(obj, number_cuts=2):
         bpy.ops.mesh.subdivide(number_cuts=number_cuts)
 
 
+def duplicate(obj, copy_data=False, collection=None):
+    if collection is None:
+        collection = bpy.context.collection
+    new_obj = obj.copy()
+    if copy_data:
+        new_obj.data = obj.data.copy()
+    collection.objects.link(new_obj)
+    return new_obj
+
+
 if __name__ == "__main__":
     pass
