@@ -49,6 +49,7 @@ class Node(object):
             node_tree = activate_node_tree.activate_node_tree_stack[-1]
         if isinstance(node, str):
             node = node_tree.nodes.new(node)
+            node["is_auto"] = True
         self.node = node
         self.node_tree = node_tree
         self.kv = kv
@@ -74,11 +75,14 @@ class Node(object):
         self.set_kv(key, value)
 
     def set_kv(self, k, v):
-        node_input = self.node.inputs[k]
-        if is_node_socket(v):
-            self.node_tree.links.new(v, node_input)
+        if k in self.node.inputs:
+            node_input = self.node.inputs[k]
+            if is_node_socket(v):
+                self.node_tree.links.new(v, node_input)
+            else:
+                node_input.default_value = v
         else:
-            node_input.default_value = v
+            setattr(self.node, k, v)
 
     def set_input(self, dic=None, **kv):
         if dic is None:
