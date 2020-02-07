@@ -20,8 +20,7 @@ class set_inst_material(StatuRecover):
         StatuRecover.__init__(self)
 
         self.set_attr(bpy.data.worlds[0], "use_nodes", False)
-        objs = [obj for obj in bpy.data.objects if obj.type == "MESH"]
-        for obj_idx, obj in enumerate(objs):
+        for obj_idx, obj in enumerate(bpy.data.objects):
             if "inst_id" in obj:
                 inst_id = obj["inst_id"]
             else:
@@ -47,6 +46,20 @@ def remove_mat(mat_or_str):
     else:
         mat = mat_or_str
     bpy.data.materials.remove(mat)
+
+
+def load_hdri_world(hdri_path):
+    world = bpy.data.worlds[0]
+    world.use_nodes = True
+    world.node_tree.nodes.clear()
+    with activate_node_tree(world.node_tree):
+        env_node = Node("ShaderNodeTexEnvironment")
+        bg_node = Node("ShaderNodeBackground")
+        output_node = Node("ShaderNodeOutputWorld")
+        env_node.image = bpy.data.images.load(hdri_path)
+        bg_node.Color = env_node.Color
+        output_node.Surface = bg_node.Background
+    return env_node
 
 
 if __name__ == "__main__":
