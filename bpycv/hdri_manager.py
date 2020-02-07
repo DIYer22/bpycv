@@ -31,7 +31,7 @@ class HdriManager:
         resolution="4k",
         category="all",
         hdri_dir="./bpycv_hdri_cache",
-        download=True,
+        download=False,
     ):
         self.resolution = resolution
         self.category = category
