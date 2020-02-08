@@ -20,7 +20,8 @@ class set_inst_material(StatuRecover):
         StatuRecover.__init__(self)
 
         self.set_attr(bpy.data.worlds[0], "use_nodes", False)
-        for obj_idx, obj in enumerate(bpy.data.objects):
+        objs = [obj for obj in bpy.data.objects if obj.type in ("MESH", "CURVE")]
+        for obj_idx, obj in enumerate(objs):
             if "inst_id" in obj:
                 inst_id = obj["inst_id"]
             else:
