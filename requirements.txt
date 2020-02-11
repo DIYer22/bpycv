@@ -1,2 +1,4 @@
 openexr
 boxx
+beautifulsoup4
+requests
