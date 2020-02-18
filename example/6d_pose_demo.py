@@ -29,7 +29,7 @@ def vis_pose(img, xyzs, pose, K, color=None):
     return img
 
 
-def vis_poses_by_ycb_meta(img, meta, xyzs=None):
+def vis_poses_by_ycb_6d_pose(img, meta, xyzs=None):
     n = meta["poses"].shape[-1]
     colors = npa(getDefaultColorList(n + 3)) * 255
     for idx in range(n):
@@ -58,8 +58,8 @@ for inst_id in range(1, 3):
 
 result = bpycv.render_data()
 
-# result["ycb_meta"] is 6d pose GT
-meta = result["ycb_meta"]
+# result["ycb_6d_pose"] is 6d pose GT
+meta = result["ycb_6d_pose"]
 img = result["image"]
 
 # cube mesh xyz
@@ -77,10 +77,10 @@ cube_xyz = np.array(
 )
 cube_xyz *= cube_size / 2
 
-vis = vis_poses_by_ycb_meta(img, meta, cube_xyz)
+vis = vis_poses_by_ycb_6d_pose(img, meta, cube_xyz)
 
 cv2.imwrite(
     "demo-vis_6d_pose.jpg", cv2.cvtColor(vis, cv2.COLOR_RGB2BGR)
 )  # cover RGB to BGR
-sio.savemat("6d_pose_ycb_meta", result["ycb_meta"])
+sio.savemat("ycb_6d_pose.mat", result["ycb_6d_pose"])
 print("Saving vis image to:", "demo-vis_6d_pose.jpg")

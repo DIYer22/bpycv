@@ -106,7 +106,7 @@ def get_K_P_from_blender(camera):
     }
 
 
-def get_6dof_pose(camera, objs, inst=None):
+def get_6d_pose(camera, objs, inst=None):
     def inst_id_to_area(inst_id):
         if inst is None:
             return -1

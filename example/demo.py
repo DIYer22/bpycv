@@ -28,7 +28,7 @@ for inst_id in range(1, 20):
     obj["inst_id"] = inst_id
 
 # render image, instance annoatation and depth in one line code
-# result["ycb_meta"] is 6d pose GT
+# result["ycb_6d_pose"] is 6d pose GT
 result = bpycv.render_data()
 
 # save result

@@ -27,5 +27,5 @@ from .statu_recover import undo
 from .object_utils import activate_obj, remove_obj, edit_mode, subdivide, duplicate
 from .material_utils import set_inst_material, load_hdri_world, build_tex
 from .render_utils import set_image_render, set_annotation_render, render_data
-from .pose_utils import get_6dof_pose
+from .pose_utils import get_6d_pose
 from .scene_setting import set_cam_pose, remove_useless_data, clear_all

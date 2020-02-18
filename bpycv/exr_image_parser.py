@@ -5,15 +5,17 @@
 @mail: ylxx@live.com
 Created on Thu Dec 26 18:15:47 2019
 """
-
 from boxx import *
-from boxx import np, inpkg, greyToRgb, histEqualize
+from boxx import np, inpkg, greyToRgb, histEqualize, pathjoin, savenp
 
 with inpkg():
     from .pseudo_color import heatmap_to_pseudo_color
     from .utils import encode_inst_id
 
+import os
+import cv2
 import OpenEXR
+import scipy.io
 
 
 class ExrDict(dict):
@@ -78,6 +80,38 @@ class ImageWithAnnotation(dict):
             np.concatenate([inst_vis, image[..., :3] / 255.0, depth_vis], 1) * 255
         ).astype(np.uint8)
         return vis
+
+    def save(self, dataset_dir, fname):
+        fname = str(fname)
+        if self.get("image") is not None:
+            image_dir = pathjoin(dataset_dir, "image")
+            os.makedirs(image_dir, exist_ok=True)
+            image_path = pathjoin(image_dir, fname + ".jpg")
+            cv2.imwrite(image_path, self["image"][..., ::-1])
+        if self.get("inst") is not None:
+            inst_dir = pathjoin(dataset_dir, "instance_map")
+            os.makedirs(inst_dir, exist_ok=True)
+            inst_path = pathjoin(inst_dir, fname + ".png")
+            cv2.imwrite(inst_path, self["inst"].clip(0).astype(np.uint16))
+        if self.get("depth") is not None:
+            depth_dir = pathjoin(dataset_dir, "depth")
+            os.makedirs(depth_dir, exist_ok=True)
+            depth_path = pathjoin(depth_dir, fname)
+            savenp(depth_path, self["depth"].astype(np.float16))
+        if (
+            self.get("image") is not None
+            and self.get("inst") is not None
+            and self.get("depth") is not None
+        ):
+            vis_dir = pathjoin(dataset_dir, "vis")
+            os.makedirs(vis_dir, exist_ok=True)
+            vis_path = pathjoin(vis_dir, fname + ".jpg")
+            cv2.imwrite(vis_path, self.vis()[..., ::-1])
+        if self.get("ycb_6d_pose") is not None:
+            pose_dir = pathjoin(dataset_dir, "ycb_6d_pose")
+            os.makedirs(pose_dir, exist_ok=True)
+            pose_path = pathjoin(pose_dir, fname + ".mat")
+            scipy.io.savemat(pose_path, self["ycb_6d_pose"])
 
 
 def parser_exr(exr_path):

@@ -17,7 +17,7 @@ from .select_utils import scene, render
 from .statu_recover import StatuRecover, undo
 from .exr_image_parser import parser_exr, ImageWithAnnotation
 from .material_utils import set_inst_material
-from .pose_utils import get_6dof_pose
+from .pose_utils import get_6d_pose
 
 
 class set_annotation_render(StatuRecover):
@@ -84,10 +84,10 @@ def render_data(render_image=True, render_annotation=True):
         render_result["exr"] = parser_exr(exr_path)
         os.remove(exr_path)
     result = ImageWithAnnotation(**render_result)
-    if "render_6dof_pose" and "Camera" in bpy.data.objects:
+    if "render_6d_pose" and "Camera" in bpy.data.objects:
         objs = [obj for obj in bpy.data.objects if "inst_id" in obj]
-        ycb_meta = get_6dof_pose(bpy.data.objects["Camera"], objs, inst=result["inst"])
-        result["ycb_meta"] = ycb_meta
+        ycb_6d_pose = get_6d_pose(bpy.data.objects["Camera"], objs, inst=result["inst"])
+        result["ycb_6d_pose"] = ycb_6d_pose
     return result
 
 
