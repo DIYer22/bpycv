@@ -1,5 +1,7 @@
 ## TODO
- - [ ] `cv2.imwrite` change to rgb channel, in demo code
+ - [ ] texturehaven's version of HdriManager
+ - [ ] demo for build_tex and hdri
+ - [ ] ImageWithAnnotation.save()
  - [ ] better instance map which consider displacement
  - [ ] pre-define domain randomization: materials
  - [ ] pre-define flying things
@@ -10,6 +12,7 @@
  - [ ] ~~document and tutorial(still early)~~
 
 ## Done
+ - [x] `cv2.imwrite` change to rgb channel, in demo code
  - [x] pre-define domain randomization: hdri
  - [x] use `bpy.ops.ed.undo_push` to undo
  - [ ] ~~detect whether in ssh X11 forward in annotation_render~~

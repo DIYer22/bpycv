@@ -12,7 +12,8 @@
  - [x] generate 6DoF pose GT
  - [x] one line code generats all of the above
  - [x] to cityscape format
- - [ ] pre-define domain randomization
+ - [x] pre-define domain randomization: enviroment
+ - [x] pre-define domain randomization: textures
  - [ ] to coco format
 
 ## ▮ Install
@@ -38,7 +39,7 @@ cd <path to blender>/2.81/python/bin
 ```
 
 ## ▮ Fast Demo
-
+#### 1. Instance Segmentation and Depth Demo
 Copy-paste this code to `Text Editor` and click `Run Script` button(or `Alt+P`)
 ```python
 import cv2
@@ -65,22 +66,31 @@ for inst_id in range(1, 20):
 result = bpycv.render_data()
 
 # save result
-cv2.imwrite("demo-rgb.jpg", result["image"])
+cv2.imwrite(
+    "demo-rgb.jpg", cv2.cvtColor(result["image"], cv2.COLOR_RGB2BGR)  # cover RGB to BGR
+)
 cv2.imwrite("demo-inst.png", result["inst"])
 # normalizing depth
 cv2.imwrite("demo-depth.png", result["depth"] / result["depth"].max() * 255)
 
 # visualization inst|rgb|depth for human
-cv2.imwrite("demo-vis(inst|rgb|depth).jpg", result.vis())
+cv2.imwrite(
+    "demo-vis(inst|rgb|depth).jpg", cv2.cvtColor(result.vis(), cv2.COLOR_RGB2BGR)
 ```
 Open `./demo-vis(inst|rgb|depth).jpg`:   
 
 ![demo-vis(inst|rgb|depth).jpg](doc/img/demo-vis(inst|rgb|depth).jpg)
 
 
-#### Generat 6DoF Pose Demo
+#### 2. 6DoF Pose Demo
+<img src="https://user-images.githubusercontent.com/10448025/74708759-5e3ee000-5258-11ea-8849-0174c34d507c.png" style="width:300px">
 
 Generate and visualize 6DoF pose GT: [example/6d_pose_demo.py](example/6d_pose_demo.py)
+
+
+#### 3. Domain Randomization Demo
+
+To be done....
 
 ## ▮ Tips
  * Right now (Blender 2.81), using Eevee engine will raise Exception("Unable to open a display") when the enviroment not support GUI.
