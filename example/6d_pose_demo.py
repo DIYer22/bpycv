@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 """
 generate and visualize 6d pose ground truth in Blender with Python API
+
+Run Command:
+    blender --background --python 6d_pose_demo.py
 """
 
 from boxx import *
@@ -11,6 +15,7 @@ import cv2
 import bpy
 import bpycv
 import random
+import scipy.io as sio
 
 
 def vis_pose(img, xyzs, pose, K, color=None):
@@ -74,4 +79,8 @@ cube_xyz *= cube_size / 2
 
 vis = vis_poses_by_ycb_meta(img, meta, cube_xyz)
 
-cv2.imwrite("demo-vis_6d_pose.jpg", vis)
+cv2.imwrite(
+    "demo-vis_6d_pose.jpg", cv2.cvtColor(vis, cv2.COLOR_RGB2BGR)
+)  # cover RGB to BGR
+sio.savemat("6d_pose_ycb_meta", result["ycb_meta"])
+print("Saving vis image to:", "demo-vis_6d_pose.jpg")
