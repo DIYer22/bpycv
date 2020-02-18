@@ -71,7 +71,7 @@ def render_data(render_image=True, render_annotation=True):
         with set_image_render(), withattr(render, "filepath", png_path):
             print("Render image using:", render.engine)
             bpy.ops.render.render(write_still=True)
-        render_result["image"] = imread(png_path)
+        render_result["image"] = imread(png_path)[..., :3]
         os.remove(png_path)
 
     if render_annotation:

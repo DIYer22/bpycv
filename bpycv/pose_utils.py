@@ -130,6 +130,7 @@ def get_6dof_pose(camera, objs, inst=None):
             meta["6ds"].append(pose)
             bound_box = np.array([list(point) for point in obj.bound_box])
             meta["bound_boxs"].append(bound_box)
+            meta["mesh_names"].append(obj.name)
 
     meta["poses"] = meta["poses"] and np.concatenate(meta["poses"], -1)
     return dict(meta)

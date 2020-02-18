@@ -37,9 +37,9 @@ class HdriManager:
         self.category = category
         self.hdri_dir = hdri_dir
         os.makedirs(hdri_dir, exist_ok=True)
-        print('Starting download ".hdr" file from "hdrihaven.com" in side threads')
         self.downloading = download
         if self.downloading:
+            print('Starting download ".hdr" file from "hdrihaven.com" in side threads')
             setTimeout(self.prepare)
         self.set_hdr_paths()
 
