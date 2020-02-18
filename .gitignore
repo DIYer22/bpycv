@@ -1,6 +1,7 @@
 ﻿example/*png
 example/*jpg
 *.exr
+*.mat
 
 tmp_*
 # Python:
