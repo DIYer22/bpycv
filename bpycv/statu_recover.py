@@ -66,6 +66,8 @@ class undo:
                 # code
     Reference:
         https://github.com/DLR-RM/BlenderProc/blob/60e559065a4b09db2bd2425822c0ebde9c77609c/src/utility/Utility.py#L200
+        
+    Warning: undo() may invalid var who point to bpy object, which may cause lots problems.
     """
 
     def __init__(self, check_point_name=None):

@@ -62,7 +62,7 @@ class set_image_render(StatuRecover):
         # render.image_settings.quality = 100
 
 
-@undo()
+# @undo()
 def render_data(render_image=True, render_annotation=True):
     path = pathjoin(tempfile.gettempdir(), "render_" + str(time.time()))
     render_result = {}
