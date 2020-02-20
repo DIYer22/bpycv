@@ -81,13 +81,8 @@ class ImageWithAnnotation(dict):
         ).astype(np.uint8)
         return vis
 
-    def save(self, dataset_dir, fname):
+    def save(self, dataset_dir="dataset", fname="0"):
         fname = str(fname)
-        if self.get("image") is not None:
-            image_dir = pathjoin(dataset_dir, "image")
-            os.makedirs(image_dir, exist_ok=True)
-            image_path = pathjoin(image_dir, fname + ".jpg")
-            cv2.imwrite(image_path, self["image"][..., ::-1])
         if self.get("inst") is not None:
             inst_dir = pathjoin(dataset_dir, "instance_map")
             os.makedirs(inst_dir, exist_ok=True)
@@ -112,6 +107,12 @@ class ImageWithAnnotation(dict):
             os.makedirs(pose_dir, exist_ok=True)
             pose_path = pathjoin(pose_dir, fname + ".mat")
             scipy.io.savemat(pose_path, self["ycb_6d_pose"])
+        # save image at last for unstable compute enviroment
+        if self.get("image") is not None:
+            image_dir = pathjoin(dataset_dir, "image")
+            os.makedirs(image_dir, exist_ok=True)
+            image_path = pathjoin(image_dir, fname + ".jpg")
+            cv2.imwrite(image_path, self["image"][..., ::-1])
 
 
 def parser_exr(exr_path):

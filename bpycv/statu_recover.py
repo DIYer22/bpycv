@@ -37,7 +37,7 @@ class StatuRecover:
                 print(
                     "Maybe, This value is invalide for other attr, try change order of self.set_attr() in the code"
                 )
-                raise e
+                # raise e
         for (
             bpy_path,
             bpy_prop_collection,
