@@ -1,4 +1,4 @@
-# `bpycv`: computer vision utils for Blender
+# `bpycv`: computer vision and deep learning utils for Blender
 
 ### Contents: [Features](#-features) | [Install](#-install) | [Fast Demo](#-fast-demo) | [Tips](#-tips) 
 
@@ -10,10 +10,9 @@
  - [x] render depth
  - [x] render annotations for instance segmentation and panoptic segmentation 
  - [x] generate 6DoF pose GT
- - [x] one line code generats all of the above
- - [x] to cityscape format
  - [x] pre-define domain randomization: enviroment
  - [x] pre-define domain randomization: textures
+ - [x] to cityscape format
  - [ ] to coco format
 
 ## ▮ Install
