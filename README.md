@@ -76,6 +76,7 @@ cv2.imwrite("demo-depth.png", result["depth"] / result["depth"].max() * 255)
 # visualization inst|rgb|depth for human
 cv2.imwrite(
     "demo-vis(inst|rgb|depth).jpg", cv2.cvtColor(result.vis(), cv2.COLOR_RGB2BGR)
+)
 ```
 Open `./demo-vis(inst|rgb|depth).jpg`:   
 
