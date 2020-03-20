@@ -17,27 +17,29 @@ import numpy as np
 import scipy.io as sio
 
 
-def _vis_pose(img, xyzs, pose, K, color=None):
-    xyz2 = np.dot(xyzs, pose[:, :3].T) + pose[:, 3]
-    p_p3d = np.dot(xyz2, K.T)
-    p_p3d[:, 0] = p_p3d[:, 0] / p_p3d[:, 2]
-    p_p3d[:, 1] = p_p3d[:, 1] / p_p3d[:, 2]
-    p2ds = p_p3d[:, :2].astype(np.int)
-    for p2d in p2ds:
-        img = cv2.circle(img, (p2d[0], p2d[1]), 10, color, -1)
+def draw_6d_pose(img, xyzs_in_obj, pose, intrinsic, color=(255, 0, 0)):
+    R, T = pose[:, :3], pose[:, 3]
+    # np.dot(xyzs, R.T) == np.dot(R, xyzs.T).T
+    xyzs_in_cam = np.dot(xyzs_in_obj, R.T) + T
+    xyzs_in_image = np.dot(xyzs_in_cam, intrinsic.T)
+    xys_in_image = xyzs_in_image[:, :2] / xyzs_in_image[:, 2:]
+    xys_in_image = xys_in_image.round().astype(np.int)
+    for xy in xys_in_image:
+        img = cv2.circle(img, tuple(xy), 10, color, -1)
     return img
 
 
-def vis_poses_by_ycb_6d_pose(img, meta, xyzs=None):
-    n = meta["poses"].shape[-1]
+def vis_ycb_6d_poses(img, mat, xyzs=None):
+    vis = img.copy()
+    n = mat["poses"].shape[-1]
     colors = np.array(boxx.getDefaultColorList(n + 3)) * 255  # get some random colors
     for idx in range(n):
-        pose = meta["poses"][:, :, idx]
-        K = meta["intrinsic_matrix"]
+        pose = mat["poses"][:, :, idx]
+        intrinsic = mat["intrinsic_matrix"]
         if xyzs is None:
-            xyzs = meta.get("bound_boxs")[idx]
-        img = _vis_pose(img, xyzs, pose, K, colors[idx + 1])
-    return img
+            xyzs = mat.get("bound_boxs")[idx]
+        draw_6d_pose(vis, xyzs, pose, intrinsic, colors[idx + 1])
+    return vis
 
 
 # remove all MESH objects
@@ -61,7 +63,7 @@ img = result["image"]
 # all vertices in cube
 cube_xyz = [list(v.co) for v in cube.data.vertices]
 
-vis = vis_poses_by_ycb_6d_pose(img, meta, cube_xyz)
+vis = vis_ycb_6d_poses(img, meta, cube_xyz)
 
 cv2.imwrite(
     "demo-vis_6d_pose.jpg", cv2.cvtColor(vis, cv2.COLOR_RGB2BGR)
