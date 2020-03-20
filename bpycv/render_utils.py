@@ -26,6 +26,8 @@ class set_annotation_render(StatuRecover):
         # TODO detect whether in ssh X11 forward
         # if sysi.gui:  # mean "does the enviroment support GUI".
         # self.set_attr(render, "engine", "BLENDER_EEVEE")
+        if render.engine == "BLENDER_WORKBENCH":
+            self.set_attr(render, "engine", "CYCLES")
         if render.engine == "BLENDER_EEVEE":
             # When enviroment not support GUI, Eevee will raise Exception("Unable to open a display")  (@Blender 2.81)
             self.set_attr(render, "engine", "BLENDER_EEVEE")
@@ -84,9 +86,9 @@ def render_data(render_image=True, render_annotation=True):
         render_result["exr"] = parser_exr(exr_path)
         os.remove(exr_path)
     result = ImageWithAnnotation(**render_result)
-    if "render_6d_pose" and "Camera" in bpy.data.objects:
+    if "render_6d_pose":
         objs = [obj for obj in bpy.data.objects if "inst_id" in obj]
-        ycb_6d_pose = get_6d_pose(bpy.data.objects["Camera"], objs, inst=result["inst"])
+        ycb_6d_pose = get_6d_pose(objs, inst=result["inst"])
         result["ycb_6d_pose"] = ycb_6d_pose
     return result
 
