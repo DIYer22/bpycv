@@ -2,11 +2,10 @@
 
 ### Contents: [Features](#-features) | [Install](#-install) | [Fast Demo](#-fast-demo) | [Tips](#-tips) 
 
-## ▮ Features
-
 ![demo-vis(inst|rgb|depth).jpg](doc/img/demo-vis(inst|rgb|depth).jpg)    
 *render instance annoatation, RGB image and depth in one line code*
 
+## ▮ Features
  - [x] render depth
  - [x] render annotations for instance segmentation and panoptic segmentation 
  - [x] generate 6DoF pose GT
