@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 """
 bpycv: computer vision utils for Blender
 """
-__version__ = "0.2.10"
+__version__ = "0.2.11"
 __short_description__ = "Computer vision utils for Blender."
 __license__ = "MIT"
 __author__ = "DIYer22"
@@ -28,4 +28,9 @@ from .object_utils import activate_obj, remove_obj, edit_mode, subdivide, duplic
 from .material_utils import set_inst_material, load_hdri_world, build_tex
 from .render_utils import set_image_render, set_annotation_render, render_data
 from .pose_utils import get_6d_pose
-from .scene_setting import set_cam_pose, remove_useless_data, clear_all
+from .scene_setting import (
+    set_cam_pose,
+    remove_useless_data,
+    clear_all,
+    set_shading_mode,
+)

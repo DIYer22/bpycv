@@ -100,9 +100,11 @@ def get_3x4_P_matrix_from_blender(camera):
 def get_K_P_from_blender(camera):
     K = get_calibration_matrix_K_from_blender(camera.data)
     RT = get_3x4_RT_matrix_from_blender(camera)
+    RT = np.asarray(RT, dtype=np.float32)
+    world_to_cam = np.append(RT, [[0, 0, 0, 1]], axis=0)
     return {
-        "K": np.asarray(K, dtype=np.float32),
-        "RT": np.asarray(RT, dtype=np.float32),
+        "intrinsic_matrix": np.asarray(K, dtype=np.float32),
+        "world_to_cam": world_to_cam,
     }
 
 
@@ -117,8 +119,7 @@ def get_6d_pose(objs, inst=None, camera=None):
         camera = bpy.context.scene.camera
     meta = defaultdict(lambda: [])
     meta.update(get_K_P_from_blender(camera))
-    meta["intrinsic_matrix"] = meta.pop("K")
-    meta["matrix_world"] = camera.matrix_world
+    meta["cam_matrix_world"] = camera.matrix_world
     for obj in objs:
         inst_id = obj.get("inst_id", -1)
         area = inst_id_to_area(inst_id)
@@ -127,8 +128,7 @@ def get_6d_pose(objs, inst=None, camera=None):
             meta["areas"].append(area)
             meta["visibles"].append(area != 0)
 
-            world_to_camera_pose = np.append(meta["RT"], [[0, 0, 0, 1]], axis=0)
-            pose = np.dot(world_to_camera_pose, obj.matrix_world)[:3]
+            pose = np.dot(meta["world_to_cam"], obj.matrix_world)[:3]
             meta["poses"].append(pose[..., None])
             meta["6ds"].append(pose)
             bound_box = np.array([list(point) for point in obj.bound_box])
