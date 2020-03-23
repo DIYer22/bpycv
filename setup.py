@@ -17,7 +17,7 @@ pyPath = (
 
 with open(pyPath) as f:
     lines = f.readlines()
-code = "".join(filter(lambda l: "import " not in l, lines))
+code = "".join(filter(lambda l: "import " not in l and l.startswith("__"), lines))
 
 
 class Pack:
