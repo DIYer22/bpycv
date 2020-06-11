@@ -28,9 +28,9 @@ def url2dict(url):
 class HdriManager:
     def __init__(
         self,
+        hdri_dir="./bpycv_hdri_cache",
         resolution="4k",
         category="all",
-        hdri_dir="./bpycv_hdri_cache",
         download=False,
     ):
         self.resolution = resolution
@@ -60,6 +60,9 @@ class HdriManager:
         if self.downloading:
             self.set_hdr_paths()
         while not len(self.hdr_paths):
+            assert (
+                self.downloading
+            ), f'No hdri file in "{self.hdri_dir}", make sure HdriManager(download=True)'
             self.set_hdr_paths()
             if timegap(5, 'waiting for download ".hdr" file'):
                 print('Waiting for download first ".hdr" file....')
@@ -74,7 +77,7 @@ class HdriManager:
         page = rq.get(url, timeout=5)
         html = BeautifulSoup(page.text)
         # '/hdri/?c=indoor&h=colorful_studio'
-        hrefs = [a["href"] for a in html.find(id="hdri-grid").find_all("a")]
+        hrefs = [a["href"] for a in html.find(id="item-grid").find_all("a")]
 
         names = [url2dict(href)["h"][0] for href in hrefs]
 
@@ -96,17 +99,14 @@ class HdriManager:
 
         _urls = download_urls[:]
         random.shuffle(_urls)
-        mapmt(download, _urls, pool=10)
+        mapmt(download, _urls, pool=2)
         self.set_hdr_paths()
         self.downloading = False
         print("Download hdri threads has finished!")
 
 
 if __name__ == "__main__":
-    hdri_dir = (
-        "/home/dl/research/learning_from_exemplar/blender_syn/blender_content/hdri"
-    )
-    # hdri_dir = "/tmp"
-    hdri_dr = HdriManager(hdri_dir=hdri_dir)
+    hdri_dir = "/tmp/hdri"
+    hdri_dr = HdriManager(hdri_dir=hdri_dir, category="indoor", download=True)
     hdri = hdri_dr.sample()
     print(hdri)
