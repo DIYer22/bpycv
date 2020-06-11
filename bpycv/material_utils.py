@@ -6,6 +6,7 @@
 Created on Sat Dec 28 21:38:05 2019
 """
 
+import boxx
 from boxx import *
 from boxx import listdir, pathjoin
 
@@ -51,7 +52,21 @@ def remove_mat(mat_or_str):
     bpy.data.materials.remove(mat)
 
 
-def load_hdri_world(hdri_path):
+def load_hdri_world(hdri_path, random_rotate_z=False):
+    """
+    
+
+    Parameters
+    ----------
+    hdri_path : str
+        pass.
+    random_rotate_z : bool, optional
+        How deg of hdri rotation. The default is False.
+
+    Returns
+    -------
+    env_node
+    """
     world = bpy.data.worlds[0]
     world.use_nodes = True
     world.node_tree.nodes.clear()
@@ -62,6 +77,15 @@ def load_hdri_world(hdri_path):
         env_node.image = bpy.data.images.load(hdri_path)
         bg_node.Color = env_node.Color
         output_node.Surface = bg_node.Background
+        if random_rotate_z:
+            rotate_deg = random.random() * 720
+            coord = Node("ShaderNodeTexCoord")
+            mapping = Node("ShaderNodeMapping", vector_type="TEXTURE")
+            mapping.Vector = coord.Object
+            coord.location = -900, 0
+            mapping.location = -600, 0
+            env_node.Vector = mapping.Vector
+            mapping.node.inputs["Rotation"].default_value.z = rotate_deg
     return env_node
 
 
