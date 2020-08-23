@@ -11,6 +11,30 @@ from boxx import *
 import bpy
 
 
+def load_obj(filepath):
+    """
+    Auto load mesh file, support .stl, .obj,
+
+    Parameters
+    ----------
+    filepath : str
+        filepath.
+
+    Returns
+    -------
+    obj
+
+    """
+    ext = filepath[filepath.rindex(".") + 1 :]
+    ext_to_import_func = {
+        "stl": bpy.ops.import_mesh.stl,
+        "obj": bpy.ops.import_scene.obj,
+    }
+    import_func = ext_to_import_func[ext]
+    import_func(filepath=filepath)
+    return bpy.context.selected_objects[-1]
+
+
 def is_obj_valid(obj):
     try:
         dir(obj)
