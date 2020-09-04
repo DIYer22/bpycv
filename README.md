@@ -6,13 +6,13 @@
 *render instance annoatation, RGB image and depth in one line code*
 
 ## ▮ Features
- - [x] render depth
- - [x] render annotations for instance segmentation and panoptic segmentation 
- - [x] generate 6DoF pose GT
- - [x] pre-define domain randomization: enviroment
- - [x] pre-define domain randomization: textures
- - [x] to cityscape format
- - [ ] to coco format
+ - [x] Render depth
+ - [x] Render annotations for instance segmentation and panoptic segmentation 
+ - [x] Generate 6DoF pose GT
+ - [x] Pre-define domain randomization: enviroment
+ - [x] Pre-define domain randomization: textures
+ - [x] To cityscape format
+ - [ ] To coco format
 
 ## ▮ Install
 `bpycv` support Blender 2.8+
@@ -28,9 +28,9 @@ sudo apt-get install libopenexr-dev
 For other OS, please follow [OpenExr's instruction](https://excamera.com/sphinx/articles-openexr.html).
 
 #### 2. Install python package
-Example for Blender 2.81:
+Example for Blender 2.83:
 ```bash
-cd <path to blender>/2.81/python/bin
+cd <path to blender>/2.83/python/bin
 ./python3.7m -m ensurepip  # get pip
 ./python3.7m -m pip install --upgrade pip setuptools wheel
 ./python3.7m -m pip install bpycv opencv-python
@@ -92,7 +92,7 @@ Generate and visualize 6DoF pose GT: [example/6d_pose_demo.py](example/6d_pose_d
 To be done....
 
 ## ▮ Tips
- * Right now (Blender 2.81), using Eevee engine will raise Exception("Unable to open a display") when the enviroment not support GUI.
+ * Right now (Blender 2.83), using Eevee engine will raise Exception("Unable to open a display") when the enviroment not support GUI.
 
 <br>
 <br>
