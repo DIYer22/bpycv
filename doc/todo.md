@@ -1,7 +1,8 @@
 ## TODO
  - [ ] texturehaven's version of HdriManager
  - [ ] demo for build_tex and hdri
- - [ ] better instance map which consider displacement
+ - [ ] better instance map: which consider displacement
+ - [ ] better instance map: by pass.object_index and compositing
  - [ ] pre-define domain randomization: materials
  - [ ] pre-define flying things
  - [ ] a better 6d pose format
