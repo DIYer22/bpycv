@@ -33,6 +33,30 @@ class HdriManager:
         category="all",
         download=False,
     ):
+        """
+        Download and manage hdri file from https://hdrihaven.com/hdris/
+
+        Parameters
+        ----------
+        hdri_dir : str, optional
+            hdri dir. The default is "./bpycv_hdri_cache".
+        resolution : str, optional
+            choice [1k, 2k, 4k, 8k, 16k, 19k]. The default is "4k".
+        category : str, optional
+            refer to https://hdrihaven.com/hdris/ side bar
+            choice one [All, Outdoor, Architecture, Building, Europe, 
+                        Field, Forest, Grass, Hill, Park, Path, River, 
+                        Road, Rock, Sun1, Tree, View, Skies, Indoor, 
+                        Studio, Nature, Urban, Night, Sunrise/Sunset, 
+                        Morning/Afternoon, Midday, Clear, Partly Cloudy, 
+                        Overcast, High Contrast, Medium Contrast, 
+                        Low Contrast, Natural Light, Artificial Light]. 
+            The default is "all".
+        download : bool, optional
+            If True, auto download from https://hdrihaven.com/hdris/ 
+            by another threading using requesets.
+            The default is False.
+        """
         self.resolution = resolution
         self.category = category
         self.hdri_dir = hdri_dir
@@ -75,7 +99,7 @@ class HdriManager:
         hdri_dir = self.hdri_dir
         url = f"https://hdrihaven.com/hdris/category/?c={category}"
         page = rq.get(url, timeout=5)
-        html = BeautifulSoup(page.text)
+        html = BeautifulSoup(page.text, features="html.parser")
         # '/hdri/?c=indoor&h=colorful_studio'
         hrefs = [a["href"] for a in html.find(id="item-grid").find_all("a")]
 
