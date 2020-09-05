@@ -29,9 +29,11 @@ def load_obj(filepath):
     ext_to_import_func = {
         "stl": bpy.ops.import_mesh.stl,
         "obj": bpy.ops.import_scene.obj,
+        "dae": bpy.ops.wm.collada_import,
     }
     import_func = ext_to_import_func[ext]
     import_func(filepath=filepath)
+    assert len(bpy.context.selected_objects) == 1, f'load "{filepath}" failed!'
     return bpy.context.selected_objects[-1]
 
 
