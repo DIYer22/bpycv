@@ -11,8 +11,10 @@ from boxx import defaultdict
 
 
 import bpy
-from mathutils import Matrix
+import mathutils
 import numpy as np
+
+from .physic_utils import OLD_V0_KEY
 
 
 # we could also define the camera matrix
@@ -45,7 +47,7 @@ def get_calibration_matrix_K_from_blender(camera):
     v_0 = resolution_y_in_px * scale / 2
     skew = 0  # only use rectangular pixels
 
-    K = Matrix(((alpha_u, skew, u_0), (0, alpha_v, v_0), (0, 0, 1)))
+    K = mathutils.Matrix(((alpha_u, skew, u_0), (0, alpha_v, v_0), (0, 0, 1)))
 
     return K
 
@@ -66,7 +68,7 @@ def get_calibration_matrix_K_from_blender(camera):
 #       - right-handed: positive z look-at direction
 def get_3x4_RT_matrix_from_blender(camera):
     # bcam stands for blender camera
-    R_bcam2cv = Matrix(((1, 0, 0), (0, -1, 0), (0, 0, -1)))
+    R_bcam2cv = mathutils.Matrix(((1, 0, 0), (0, -1, 0), (0, 0, -1)))
 
     # Use matrix_world instead to account for all constraints
     location, rotation = camera.matrix_world.decompose()[0:2]
@@ -81,7 +83,7 @@ def get_3x4_RT_matrix_from_blender(camera):
     T_world2cv = R_bcam2cv @ T_world2bcam
 
     # put into 3x4 matrix
-    RT = Matrix(
+    RT = mathutils.Matrix(
         (
             R_world2cv[0][:] + (T_world2cv[0],),
             R_world2cv[1][:] + (T_world2cv[1],),
@@ -108,6 +110,13 @@ def get_K_P_from_blender(camera):
     }
 
 
+def matrix_world_for_old_origin(matrix_world, obj):
+    old_v0 = obj[OLD_V0_KEY]
+    to_default_origin_vector = obj.data.vertices[0].co - mathutils.Vector(old_v0)
+    matrix_world.translation = matrix_world.translation + to_default_origin_vector
+    return matrix_world
+
+
 def get_6d_pose(objs, inst=None, camera=None):
     def inst_id_to_area(inst_id):
         if inst is None:
@@ -128,7 +137,13 @@ def get_6d_pose(objs, inst=None, camera=None):
             meta["areas"].append(area)
             meta["visibles"].append(area != 0)
 
-            pose = np.dot(meta["world_to_cam"], obj.matrix_world)[:3]
+            matrix_world = obj.matrix_world.copy()
+            if OLD_V0_KEY in obj:
+                matrix_world = matrix_world_for_old_origin(matrix_world, obj)
+                print(obj.matrix_world)
+                print(matrix_world)
+
+            pose = np.dot(meta["world_to_cam"], matrix_world)[:3]
             meta["poses"].append(pose[..., None])
             meta["6ds"].append(pose)
             bound_box = np.array([list(point) for point in obj.bound_box])
