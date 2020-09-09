@@ -12,6 +12,7 @@ from boxx import os, pathjoin, withattr, imread, sysi
 import bpy
 import time
 import tempfile
+from collections import OrderedDict
 
 from .select_utils import scene, render
 from .statu_recover import StatuRecover, undo
@@ -64,8 +65,15 @@ class set_image_render(StatuRecover):
         # render.image_settings.quality = 100
 
 
+befor_render_data_hooks = OrderedDict()
+
 # @undo()
 def render_data(render_image=True, render_annotation=True):
+    for hook_name, hook in befor_render_data_hooks.items():
+        print(f"Run befor_render_data_hooks[{hook_name}]")
+        hook()
+    befor_render_data_hooks.clear()
+
     path = pathjoin(tempfile.gettempdir(), "render_" + str(time.time()))
     render_result = {}
     if render_image:
