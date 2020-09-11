@@ -107,5 +107,34 @@ def set_shading_mode(mode="SOLID", screens=[]):
                 break  # we expect at most 1 VIEW_3D space
 
 
+def add_stage(size=2, transparency=False):
+    """
+    add PASSIVE rigidbody cube for physic stage or depth background 
+
+    Parameters
+    ----------
+    size : float, optional
+        size of stage. The default is 2.
+    transparency : bool, optional
+        transparency for rgb but set limit for depth. The default is False.
+    """
+    import bpycv
+
+    bpy.ops.mesh.primitive_cube_add(size=size, location=(0, 0, -size / 2))
+    stage = bpy.context.active_object
+    with bpycv.activate_obj(stage):
+        bpy.ops.rigidbody.object_add()
+        stage.rigid_body.type = "PASSIVE"
+        if transparency:
+            material = bpy.data.materials.new("transparency_stage")
+            material.use_nodes = True
+            material.node_tree.nodes.clear()
+            with bpycv.activate_node_tree(material.node_tree):
+                bpycv.Node("ShaderNodeOutputMaterial").Surface = bpycv.Node(
+                    "ShaderNodeBsdfPrincipled", Alpha=0
+                ).BSDF
+            stage.data.materials.append(material)
+
+
 if __name__ == "__main__":
     pass

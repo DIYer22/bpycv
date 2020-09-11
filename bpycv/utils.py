@@ -69,7 +69,7 @@ class encode_inst_id:
 
     @classmethod
     def test(cls):
-        inst0 = np.arange(0, 10000)
+        inst0 = np.arange(-100, 10000)
         inst1 = np.random.randint(
             -cls.max_denominator / 2, cls.max_denominator / 2, (10000)
         )

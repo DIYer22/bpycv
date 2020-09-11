@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 """
 bpycv: computer vision utils for Blender
 """
-__version__ = "0.2.15"
+__version__ = "0.2.16"
 __short_description__ = "Computer vision utils for Blender."
 __license__ = "MIT"
 __author__ = "DIYer22"
@@ -41,5 +41,6 @@ from .scene_setting import (
     remove_useless_data,
     clear_all,
     set_shading_mode,
+    add_stage,
 )
 from .physic_utils import set_origin_and_record_old_v0
