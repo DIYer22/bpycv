@@ -128,7 +128,7 @@ def get_6d_pose(objs, inst=None, camera=None):
         camera = bpy.context.scene.camera
     meta = defaultdict(lambda: [])
     meta.update(get_K_P_from_blender(camera))
-    meta["cam_matrix_world"] = camera.matrix_world
+    meta["cam_matrix_world"] = np.array(camera.matrix_world)
     for obj in objs:
         inst_id = obj.get("inst_id", -1)
         area = inst_id_to_area(inst_id)
@@ -140,8 +140,6 @@ def get_6d_pose(objs, inst=None, camera=None):
             matrix_world = obj.matrix_world.copy()
             if OLD_V0_KEY in obj:
                 matrix_world = matrix_world_for_old_origin(matrix_world, obj)
-                print(obj.matrix_world)
-                print(matrix_world)
 
             pose = np.dot(meta["world_to_cam"], matrix_world)[:3]
             meta["poses"].append(pose[..., None])
