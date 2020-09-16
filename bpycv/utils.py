@@ -53,6 +53,9 @@ class encode_inst_id:
         is_negative = (-1) ** (rgb[..., 0] == 1)
         # int_part = (1 / (1 - rgb[..., 1]) - 1).round()
 
+        bg_mask = rgb[..., 1] == 0
+        rgb[bg_mask, 1] = 0.5
+
         numerator = (cls.max_denominator * rgb[..., 1]).round().astype(np.int32)
         low_bit = (numerator ^ (numerator - 1)) & numerator
         numerator_odd = numerator // low_bit
@@ -62,6 +65,7 @@ class encode_inst_id:
         int_part = 2 ** (depth - 1) - 1 + idx_in_level
         int_part = np.int32(int_part)
 
+        int_part = int_part * (~bg_mask)
         if rgb[..., 2].any():  # has float
             return is_negative * (int_part + rgb[..., 2])
         else:  # pure int
@@ -85,6 +89,10 @@ class encode_inst_id:
                 recover = encode_inst_id.rgb_to_id(rgb)
                 boxx.mg()
                 assert recover == inst_id, (inst_id, recover)
+
+        assert (
+            encode_inst_id.rgb_to_id(np.float32([0, 0, 0])) == 0
+        ), "Check background should decode to 0"
 
 
 def ipython():
