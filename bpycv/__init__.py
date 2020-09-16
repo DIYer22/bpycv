@@ -1,21 +1,10 @@
 # -*- coding: utf-8 -*-
-
-from __future__ import unicode_literals
-
 """
 bpycv: computer vision utils for Blender
+    https://github.com/DIYer22/bpycv
 """
-__version__ = "0.2.17"
-__short_description__ = "Computer vision utils for Blender."
-__license__ = "MIT"
-__author__ = "DIYer22"
-__author_email__ = "ylxx@live.com"
-__maintainer__ = "DIYer22"
-__maintainer_email__ = "ylxx@live.com"
-__github_username__ = "DIYer22"
-__github_url__ = "https://github.com/DIYer22/bpycv"
-__support__ = "https://github.com/DIYer22/bpycv/issues"
 
+from .__info__ import __version__
 
 from .utils import ipython
 from .hdri_manager import HdriManager

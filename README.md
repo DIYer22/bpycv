@@ -32,8 +32,7 @@ Example for Blender 2.83:
 ```bash
 cd <path to blender>/2.83/python/bin
 ./python3.7m -m ensurepip  # get pip
-./python3.7m -m pip install --upgrade pip setuptools wheel
-./python3.7m -m pip install bpycv opencv-python
+./python3.7m -m pip install --upgrade pip bpycv setuptools wheel opencv-python
 ```
 
 ## ▮ Fast Demo
