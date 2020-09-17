@@ -40,7 +40,7 @@ cd <path to blender>/2.90/python/bin
 
 ## ▮ Fast Demo
 #### 1. Instance Segmentation and Depth Demo
-Copy-paste this code to `Text Editor` and click `Run Script` button(or `Alt+P`)
+Copy-paste this code to `Scripting/Text Editor` and click `Run Script` button(or `Alt+P`)
 ```python
 import cv2
 import bpy
