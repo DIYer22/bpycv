@@ -8,11 +8,11 @@ Notice: When update demo.py:
             https://blender.stackexchange.com/a/162746/86396 
 """
 
+import cv2
 import bpy
 import bpycv
 import random
 import numpy as np
-from skimage.io import imsave
 
 # remove all MESH objects
 [bpy.data.objects.remove(obj) for obj in bpy.data.objects if obj.type == "MESH"]
@@ -35,12 +35,17 @@ for index in range(1, 20):
 result = bpycv.render_data()
 
 # save result
-imsave("demo-rgb.jpg", result["image"])
-imsave("demo-inst.png", np.uint16(result["inst"]))  # save instance map as 16 bit png
+cv2.imwrite(
+    "demo-rgb.jpg", result["image"][..., ::-1]
+)  # transfer RGB image to opencv's BGR
+
+# save instance map as 16 bit png
+# the value of each pixel represents the inst_id of the object to which the pixel belongs
+cv2.imwrite("demo-inst.png", np.uint16(result["inst"]))
 
 # convert depth units from meters to millimeters
 depth_in_mm = result["depth"] * 1000
-imsave("demo-depth.png", np.uint16(depth_in_mm))  # save as 16bit png
+cv2.imwrite("demo-depth.png", np.uint16(depth_in_mm))  # save as 16bit png
 
 # visualization inst_rgb_depth for human
-imsave("demo-vis(inst_rgb_depth).jpg", result.vis())
+cv2.imwrite("demo-vis(inst_rgb_depth).jpg", result.vis()[..., ::-1])

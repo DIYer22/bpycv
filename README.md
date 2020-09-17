@@ -28,22 +28,23 @@ sudo apt-get install libopenexr-dev
 For other OS, please follow [OpenExr's instruction](https://excamera.com/sphinx/articles-openexr.html).
 
 #### 2. Install python package
-Example for Blender 2.83:
+Example for Blender 2.90:
 ```bash
-cd <path to blender>/2.83/python/bin
+cd <path to blender>/2.90/python/bin
 ./python3.7m -m ensurepip  # get pip
-./python3.7m -m pip install --upgrade pip bpycv setuptools wheel opencv-python
+./python3.7m -m pip install -U pip setuptools wheel 
+./python3.7m -m pip install -U opencv-python openexr bpycv
 ```
 
 ## ▮ Fast Demo
 #### 1. Instance Segmentation and Depth Demo
 Copy-paste this code to `Text Editor` and click `Run Script` button(or `Alt+P`)
 ```python
+import cv2
 import bpy
 import bpycv
 import random
 import numpy as np
-from skimage.io import imsave
 
 # remove all MESH objects
 [bpy.data.objects.remove(obj) for obj in bpy.data.objects if obj.type == "MESH"]
@@ -66,15 +67,20 @@ for index in range(1, 20):
 result = bpycv.render_data()
 
 # save result
-imsave("demo-rgb.jpg", result["image"])
-imsave("demo-inst.png", np.uint16(result["inst"]))  # save instance map as 16 bit png
+cv2.imwrite(
+    "demo-rgb.jpg", result["image"][..., ::-1]
+)  # transfer RGB image to opencv's BGR
+
+# save instance map as 16 bit png
+# the value of each pixel represents the inst_id of the object to which the pixel belongs
+cv2.imwrite("demo-inst.png", np.uint16(result["inst"]))
 
 # convert depth units from meters to millimeters
 depth_in_mm = result["depth"] * 1000
-imsave("demo-depth.png", np.uint16(depth_in_mm))  # save as 16bit png
+cv2.imwrite("demo-depth.png", np.uint16(depth_in_mm))  # save as 16bit png
 
 # visualization inst_rgb_depth for human
-imsave("demo-vis(inst_rgb_depth).jpg", result.vis())
+cv2.imwrite("demo-vis(inst_rgb_depth).jpg", result.vis()[..., ::-1])
 ```
 Open `./demo-vis(inst_rgb_depth).jpg`:   
 
