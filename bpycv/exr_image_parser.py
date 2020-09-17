@@ -19,7 +19,7 @@ import scipy.io
 
 
 class ExrDict(dict):
-    LIMIT_DEPTH = 1e8
+    LIMIT_DEPTH = 6e4
 
     def __getattribute__(self, key):
         if key in self:
@@ -35,10 +35,8 @@ class ExrDict(dict):
         return np.concatenate([self.get_rgb(), self["A"][..., None]], -1)
 
     def get_pseudo_color(self):
-
         limit_mask = self["Z"] < self.LIMIT_DEPTH
         depth = self["Z"] * limit_mask
-        # depth = np.log(depth + 1)
         depth = depth / depth.max()
         depth[~limit_mask] = 1.1
         depth = 1 - depth
