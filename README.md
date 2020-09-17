@@ -15,7 +15,9 @@
  - [ ] To coco format
 
 ## ▮ Install
-`bpycv` support Blender 2.8+
+`bpycv` support Blender 2.8, 2.9
+
+Troubleshooting tips: [doc/troubleshooting.md](doc/troubleshooting.md)
 
 #### 1. Install OpenExr
 `bpycv` use OpenExr to extract depth map from Blender
