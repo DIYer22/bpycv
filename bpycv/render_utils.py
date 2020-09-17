@@ -14,7 +14,6 @@ import time
 import tempfile
 from collections import OrderedDict
 
-from .select_utils import scene, render
 from .statu_recover import StatuRecover, undo
 from .exr_image_parser import parser_exr, ImageWithAnnotation
 from .material_utils import set_inst_material
@@ -27,6 +26,8 @@ class set_annotation_render(StatuRecover):
         # TODO detect whether in ssh X11 forward
         # if sysi.gui:  # mean "does the enviroment support GUI".
         # self.set_attr(render, "engine", "BLENDER_EEVEE")
+        scene = bpy.data.scenes[0]
+        render = scene.render
         if render.engine == "BLENDER_WORKBENCH":
             self.set_attr(render, "engine", "CYCLES")
         if render.engine == "BLENDER_EEVEE":
@@ -57,6 +58,8 @@ class set_annotation_render(StatuRecover):
 class set_image_render(StatuRecover):
     def __init__(self):
         StatuRecover.__init__(self)
+        scene = bpy.data.scenes[0]
+        render = scene.render
         # self.set_attr(render, "engine", "BLENDER_EEVEE" if eevee else "CYCLES")
         # self.set_attr(scene.cycles, "samples", 128)
         attrs = dict(file_format="PNG", compression=15)
@@ -69,6 +72,8 @@ befor_render_data_hooks = OrderedDict()
 
 # @undo()
 def render_data(render_image=True, render_annotation=True):
+    scene = bpy.data.scenes[0]
+    render = scene.render
     for hook_name, hook in befor_render_data_hooks.items():
         print(f"Run befor_render_data_hooks[{hook_name}]")
         hook()
