@@ -2,13 +2,15 @@
  - [ ] texturehaven's version of HdriManager
  - [ ] demo for build_tex and hdri
  - [ ] better instance map: which consider displacement
- - [ ] better instance map: by pass.object_index and compositing
+    - [ ] better instance map: by pass.object_index and compositing
  - [ ] pre-define domain randomization: materials
  - [ ] pre-define flying things
  - [ ] a better 6d pose format
  - [ ] visualize 3d bounding box of 6DoF GT(How to set xyzs)
  - [ ] answer first result of google: "blender depth python"
- - [ ] to coco format
+ - [ ] to COCO format
+ - [ ] project example: YCB model example
+ - [ ] make better demo images by `img_switch_special_effect.js`
  - [ ] ~~document and tutorial(still early)~~
 
 ## Done
