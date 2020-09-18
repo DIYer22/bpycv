@@ -59,7 +59,8 @@ class ExrDict(dict):
 
 
 class ImageWithAnnotation(dict):
-    def __init__(self, image=None, exr=None):
+    def __init__(self, image=None, exr=None, **kv):
+        super().__init__(**kv)
         self["image"] = image
         self["inst"] = exr.get_inst()
         self["depth"] = exr.get_depth()

@@ -126,7 +126,7 @@ def add_stage(size=2, transparency=False):
         bpy.ops.rigidbody.object_add()
         stage.rigid_body.type = "PASSIVE"
         if transparency:
-            material = bpy.data.materials.new("transparency_stage")
+            material = bpy.data.materials.new("transparency_stage_bpycv")
             material.use_nodes = True
             material.node_tree.nodes.clear()
             with bpycv.activate_node_tree(material.node_tree):
@@ -134,6 +134,7 @@ def add_stage(size=2, transparency=False):
                     "ShaderNodeBsdfPrincipled", Alpha=0
                 ).BSDF
             stage.data.materials.append(material)
+    return stage
 
 
 if __name__ == "__main__":
