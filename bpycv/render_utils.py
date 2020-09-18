@@ -7,7 +7,7 @@ Created on Sat Dec 28 21:33:28 2019
 """
 
 from boxx import *
-from boxx import os, pathjoin, withattr, imread, sysi
+from boxx import os, withattr, imread, sysi
 
 import bpy
 import time
@@ -68,6 +68,18 @@ class set_image_render(StatuRecover):
         # render.image_settings.quality = 100
 
 
+def render_image():
+    render = bpy.data.scenes[0].render
+    png_path = tempfile.NamedTemporaryFile().name + ".png"
+    with set_image_render(), withattr(render, "filepath", png_path):
+        print("Render image using:", render.engine)
+        bpy.ops.render.render(write_still=True)
+    image = imread(png_path)[..., :3]
+    os.remove(png_path)
+    return image
+
+
+_render_image = render_image
 befor_render_data_hooks = OrderedDict()
 
 # @undo()
@@ -79,16 +91,10 @@ def render_data(render_image=True, render_annotation=True):
         hook()
     befor_render_data_hooks.clear()
 
-    path = pathjoin(tempfile.gettempdir(), "render_" + str(time.time()))
+    path = tempfile.NamedTemporaryFile().name
     render_result = {}
     if render_image:
-        png_path = path + ".png"
-        with set_image_render(), withattr(render, "filepath", png_path):
-            print("Render image using:", render.engine)
-            bpy.ops.render.render(write_still=True)
-        render_result["image"] = imread(png_path)[..., :3]
-        os.remove(png_path)
-
+        render_result["image"] = _render_image()
     if render_annotation:
         exr_path = path + ".exr"
         with set_inst_material(), set_annotation_render(), withattr(
@@ -99,7 +105,7 @@ def render_data(render_image=True, render_annotation=True):
         render_result["exr"] = parser_exr(exr_path)
         os.remove(exr_path)
     result = ImageWithAnnotation(**render_result)
-    if "render_6d_pose":
+    if "render_6d_pose" and render_annotation:
         objs = [obj for obj in bpy.data.objects if "inst_id" in obj]
         ycb_6d_pose = get_6d_pose(objs, inst=result["inst"])
         result["ycb_6d_pose"] = ycb_6d_pose
