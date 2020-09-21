@@ -9,7 +9,7 @@ here = os.path.dirname(os.path.realpath(__file__))
 with open("requirements.txt") as f:
     requirements = [line.strip() for line in f]
 
-with open("README.md") as f:
+with open("README.md", encoding='utf-8') as f:
     long_description = f.read()
 
 info = {}
