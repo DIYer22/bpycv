@@ -7,10 +7,9 @@ Created on Sat Dec 28 21:33:28 2019
 """
 
 from boxx import *
-from boxx import os, withattr, imread, sysi
+from boxx import os, withattr, imread
 
 import bpy
-import time
 import tempfile
 from collections import OrderedDict
 
@@ -18,6 +17,21 @@ from .statu_recover import StatuRecover, undo
 from .exr_image_parser import parser_exr, ImageWithAnnotation
 from .material_utils import set_inst_material
 from .pose_utils import get_6d_pose
+
+
+def set_cycles_compute_device_type(compute_device_type="CUDA"):
+    bpy.context.scene.cycles.device = "GPU"
+    bpy.context.preferences.addons[
+        "cycles"
+    ].preferences.compute_device_type = compute_device_type
+    bpy.context.preferences.addons["cycles"].preferences.get_devices()
+    print(
+        "compute_device_type =",
+        bpy.context.preferences.addons["cycles"].preferences.compute_device_type,
+    )
+    for d in bpy.context.preferences.addons["cycles"].preferences.devices:
+        d["use"] = True
+        print(d["name"], d["use"])
 
 
 class set_annotation_render(StatuRecover):
@@ -60,12 +74,8 @@ class set_image_render(StatuRecover):
         StatuRecover.__init__(self)
         scene = bpy.data.scenes[0]
         render = scene.render
-        # self.set_attr(render, "engine", "BLENDER_EEVEE" if eevee else "CYCLES")
-        # self.set_attr(scene.cycles, "samples", 128)
         attrs = dict(file_format="PNG", compression=15)
         self.set_attrs(render.image_settings, attrs)
-        # render.image_settings.file_format = 'JPEG'
-        # render.image_settings.quality = 100
 
 
 def render_image():

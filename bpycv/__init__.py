@@ -23,6 +23,7 @@ from .object_utils import (
 )
 from .material_utils import set_inst_material, load_hdri_world, build_tex
 from .render_utils import (
+    set_cycles_compute_device_type,
     set_image_render,
     set_annotation_render,
     render_image,
