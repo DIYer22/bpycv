@@ -12,6 +12,10 @@
  - [ ] project example: YCB model example
  - [ ] make better demo images by `img_switch_special_effect.js`
  - [ ] ~~document and tutorial(still early)~~
+ - [ ] difference with:
+   - https://github.com/DLR-RM/BlenderProc
+   - https://github.com/Cartucho/vision_blender
+   - https://github.com/cheind/pytorch-blender
 
 ## Done
  - [x] ImageWithAnnotation.save()
