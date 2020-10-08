@@ -26,6 +26,8 @@ def url2dict(url):
 
 
 class HdriManager:
+    exts = ["hdr", "exr"]
+
     def __init__(
         self,
         hdri_dir="./bpycv_hdri_cache",
@@ -68,7 +70,15 @@ class HdriManager:
         self.set_hdr_paths()
 
     def set_hdr_paths(self):
-        self.hdr_paths = sorted(glob.glob(os.path.join(self.hdri_dir, "*.hdr")))
+        self.hdr_paths = sorted(
+            sum(
+                [
+                    glob.glob(os.path.join(self.hdri_dir, f"*.{ext}"))
+                    for ext in self.exts
+                ],
+                [],
+            )
+        )
 
     def __len__(self):
         if self.downloading:
@@ -107,19 +117,28 @@ class HdriManager:
 
         #  'https://hdrihaven.com/files/hdris/tv_studio_4k.hdr'
         download_urls = [
-            f"https://hdrihaven.com/files/hdris/{name}_{resolution}.hdr"
+            f"https://hdrihaven.com/files/hdris/{name}_{resolution}"  # + .hdr or .exr
             for name in names
         ]
 
         def download(url):
             fname = os.path.basename(url)
-            path = os.path.join(hdri_dir, fname)
-            if not os.path.isfile(path):
-                content = rq.get(url, timeout=5).content
+            file_path = os.path.join(hdri_dir, fname)
+            for ext in self.exts:
+                path = f"{file_path}.{ext}"
+                if os.path.isfile(path):
+                    return path
+            for ext in self.exts:
+                path = f"{file_path}.{ext}"
+                downlaod_url = f"{url}.{ext}"
+                r = rq.get(downlaod_url, timeout=5)
+                if r.status_code != 200:
+                    continue
                 os.makedirs(hdri_dir, exist_ok=True)
                 with open(path, "wb") as f:
-                    f.write(content)
-            return path
+                    f.write(r.content)
+                return path
+            raise Exception(f"Con't download {file_path}")
 
         _urls = download_urls[:]
         random.shuffle(_urls)
@@ -131,6 +150,6 @@ class HdriManager:
 
 if __name__ == "__main__":
     hdri_dir = "/tmp/hdri"
-    hdri_dr = HdriManager(hdri_dir=hdri_dir, category="indoor", download=True)
+    hdri_dr = HdriManager(hdri_dir=hdri_dir, download=True)
     hdri = hdri_dr.sample()
     print(hdri)
