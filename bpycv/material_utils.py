@@ -13,8 +13,8 @@ from boxx import listdir, pathjoin
 import bpy
 import random
 
-from .statu_recover import StatuRecover
 from .utils import encode_inst_id
+from .statu_recover import StatuRecover
 from .node_graph import activate_node_tree, Node
 
 

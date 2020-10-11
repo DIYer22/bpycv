@@ -39,3 +39,4 @@ from .scene_setting import (
     add_stage,
 )
 from .physic_utils import set_origin_and_record_old_v0
+from .domain_randomzition import texture_bsdf_dr, load_distractor

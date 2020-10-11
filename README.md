@@ -11,6 +11,7 @@
  - [x] Generate 6DoF pose GT
  - [x] Pre-define domain randomization: enviroment
  - [x] Pre-define domain randomization: textures
+ - [x] Pre-define domain randomization: distractor
  - [x] To cityscape format
  - [ ] To coco format
 

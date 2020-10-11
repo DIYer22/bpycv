@@ -3,8 +3,6 @@
  - [ ] demo for build_tex and hdri
  - [ ] better instance map: which consider displacement
     - [ ] better instance map: by pass.object_index and compositing
- - [ ] pre-define domain randomization: materials
- - [ ] pre-define flying things
  - [ ] a better 6d pose format
  - [ ] visualize 3d bounding box of 6DoF GT(How to set xyzs)
  - [ ] answer first result of google: "blender depth python"
@@ -18,6 +16,8 @@
    - https://github.com/cheind/pytorch-blender
 
 ## Done
+ - [x] pre-define distractor
+ - [x] pre-define domain randomization: texture
  - [x] ImageWithAnnotation.save()
  - [x] `cv2.imwrite` change to rgb channel, in demo code
  - [x] pre-define domain randomization: hdri
