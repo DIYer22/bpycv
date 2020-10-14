@@ -126,9 +126,20 @@ def get_6d_pose(objs, inst=None, camera=None):
     bpy.context.view_layer.update()
     if camera is None:
         camera = bpy.context.scene.camera
-    meta = defaultdict(lambda: [])
+    meta = dict()
     meta.update(get_K_P_from_blender(camera))
     meta["cam_matrix_world"] = np.array(camera.matrix_world)
+    for key in [
+        "inst_ids",
+        "areas",
+        "visibles",
+        "poses",
+        "6ds",
+        "bound_boxs",
+        "mesh_names",
+    ]:
+        # default is []
+        meta[key] = []
     for obj in objs:
         inst_id = obj.get("inst_id", -1)
         area = inst_id_to_area(inst_id)
