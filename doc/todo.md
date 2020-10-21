@@ -7,7 +7,6 @@
  - [ ] visualize 3d bounding box of 6DoF GT(How to set xyzs)
  - [ ] answer first result of google: "blender depth python"
  - [ ] to COCO format
- - [ ] project example: YCB model example
  - [ ] make better demo images by `img_switch_special_effect.js`
  - [ ] ~~document and tutorial(still early)~~
  - [ ] difference with:
@@ -16,6 +15,7 @@
    - https://github.com/cheind/pytorch-blender
 
 ## Done
+ - [x] project example: YCB model example
  - [x] pre-define distractor
  - [x] pre-define domain randomization: texture
  - [x] ImageWithAnnotation.save()
