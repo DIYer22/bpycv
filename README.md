@@ -87,21 +87,42 @@ cv2.imwrite("demo-vis(inst_rgb_depth).jpg", result.vis()[..., ::-1])
 ```
 Open `./demo-vis(inst_rgb_depth).jpg`:   
 
-![demo-vis(inst_rgb_depth).jpg](doc/img/demo-vis(inst_rgb_depth).jpg)
+![demo-vis(inst_rgb_depth)](https://user-images.githubusercontent.com/10448025/96727938-322abe80-13e6-11eb-9888-58886e8e68fd.jpg)
 
+#### 2. YCB Demo
+```shell
+mkdir ycb_demo
+cd ycb_demo/
 
-#### 2. 6DoF Pose Demo
+# prepare demo code and data
+git clone https://github.com/DIYer22/bpycv
+git clone https://github.com/DIYer22/bpycv_example_data
+
+cd bpycv/example/
+
+blender -b -P ycb_demo.py
+
+cd dataset/vis/
+ls .  # visualize result here
+```
+Open `0.jpg`:   
+![0.jpg](https://user-images.githubusercontent.com/10448025/96726839-fb07dd80-13e4-11eb-86ab-0241550861f2.jpg)   
+(inst_map | RGB | depth)
+
+YCB demo code: [example/ycb_demo.py](example/ycb_demo.py)
+
+#### 3. 6DoF Pose Demo
 <img src="https://user-images.githubusercontent.com/10448025/74708759-5e3ee000-5258-11ea-8849-0174c34d507c.png" style="width:300px">
 
 Generate and visualize 6DoF pose GT: [example/6d_pose_demo.py](example/6d_pose_demo.py)
 
-
-#### 3. Domain Randomization Demo
+#### 4. Domain Randomization Demo
 
 To be done....
 
 ## ▮ Tips
- * Right now (Blender 2.83), using Eevee engine will raise Exception("Unable to open a display") when the enviroment not support GUI.
+ > Blender may can't direct load `.obj` and `.dea` file from YCB and ShapeNet dataset.  
+ > It's better to transefer and format using [`meshlabserver`](https://github.com/cnr-isti-vclab/meshlab/releases) by run `meshlabserver -i raw.obj -o for_blender.obj -m wt`
 
 <br>
 <br>
