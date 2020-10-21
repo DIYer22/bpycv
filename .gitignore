@@ -1,4 +1,5 @@
-﻿example/*png
+﻿dataset
+example/*png
 example/*jpg
 *.exr
 *.mat
