@@ -9,9 +9,10 @@
  - [x] Render depth
  - [x] Render annotations for instance segmentation and panoptic segmentation 
  - [x] Generate 6DoF pose GT
- - [x] Pre-define domain randomization: enviroment
- - [x] Pre-define domain randomization: textures
+ - [x] Pre-define domain randomization: light
+ - [x] Pre-define domain randomization: background
  - [x] Pre-define domain randomization: distractor
+ - [x] Pre-define domain randomization: textures
  - [x] To cityscape format
  - [ ] To coco format
 
