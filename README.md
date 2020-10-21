@@ -54,7 +54,7 @@ import numpy as np
 
 for index in range(1, 20):
     # create cube and sphere as instance at random location
-    location = [random.random() * 4 - 2 for _ in range(3)]
+    location = [random.uniform(-2, 2) for _ in range(3)]
     if index % 2:
         bpy.ops.mesh.primitive_cube_add(size=0.5, location=location)
         categories_id = 1
