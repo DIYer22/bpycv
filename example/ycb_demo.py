@@ -6,21 +6,20 @@ import bpycv
 import os
 import glob
 import random
-from pathlib import Path
 
-example_data_dir = Path(
-    os.path.abspath(os.path.join(__file__, "../../../bpycv_example_data"))
+example_data_dir = os.path.abspath(
+    os.path.join(__file__, "../../../bpycv_example_data")
 )
 
-models = sorted(glob.glob(str(example_data_dir / "model" / "*" / "*.obj")))
+models = sorted(glob.glob(os.path.join(example_data_dir, "model", "*", "*.obj")))
 cat_id_to_model_path = dict(enumerate(sorted(models), 1))
 
-distractors = sorted(glob.glob(str(example_data_dir / "distractor" / "*.obj")))
+distractors = sorted(glob.glob(os.path.join(example_data_dir, "distractor", "*.obj")))
 
 bpycv.clear_all()
 bpy.context.scene.frame_set(1)
 bpy.context.scene.render.engine = "CYCLES"
-bpy.context.scene.cycles.samples = 16
+bpy.context.scene.cycles.samples = 32
 bpy.context.scene.render.resolution_y = 1024
 bpy.context.scene.render.resolution_x = 1024
 
@@ -29,15 +28,15 @@ stage = bpycv.add_stage(transparency=True)
 
 bpycv.set_cam_pose(cam_radius=1, cam_deg=45)
 
-hdri_dir = str(example_data_dir / "background_and_light")
+hdri_dir = os.path.join(example_data_dir, "background_and_light")
 hdri_manager = bpycv.HdriManager(
     hdri_dir=hdri_dir, download=False
 )  # if download is True, will auto download .hdr file from HDRI Haven
 hdri_path = hdri_manager.sample()
 bpycv.load_hdri_world(hdri_path, random_rotate_z=True)
 
-# load 4 objects
-for index in range(4):
+# load 5 objects
+for index in range(5):
     cat_id = random.choice(list(cat_id_to_model_path))
     model_path = cat_id_to_model_path[cat_id]
     obj = bpycv.load_obj(model_path)
@@ -52,8 +51,8 @@ for index in range(4):
     with bpycv.activate_obj(obj):
         bpy.ops.rigidbody.object_add()
 
-# load 5 distractors
-for index in range(5):
+# load 6 distractors
+for index in range(6):
     distractor_path = random.choice(distractors)
     target_size = random.uniform(0.1, 0.3)
     distractor = bpycv.load_distractor(distractor_path, target_size=target_size)
