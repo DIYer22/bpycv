@@ -108,7 +108,7 @@ ls .  # visualize result here
 ```
 Open `0.jpg`:   
 ![0](https://user-images.githubusercontent.com/10448025/96836463-98135680-1477-11eb-8a5f-8911bc454336.jpg)    
-(inst_map | RGB | depth)
+(instance_map | RGB | depth)
 
 YCB demo code: [example/ycb_demo.py](example/ycb_demo.py)
 
