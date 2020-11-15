@@ -7,7 +7,7 @@
 
 ## ▮ Features
  - [x] Render depth
- - [x] Render annotations for instance segmentation and panoptic segmentation 
+ - [x] Render annotations for semantic segmentation, instance segmentation, and panoptic segmentation 
  - [x] Generate 6DoF pose GT
  - [x] Pre-define domain randomization: light
  - [x] Pre-define domain randomization: background
