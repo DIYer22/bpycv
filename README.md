@@ -2,7 +2,7 @@
 
 ### Contents: [Features](#-features) | [Install](#-install) | [Fast Demo](#-fast-demo) | [Tips](#-tips) 
 
-![demo-vis(inst_rgb_depth).jpg](doc/img/demo-vis(inst_rgb_depth).jpg)    
+![0](https://user-images.githubusercontent.com/10448025/96836463-98135680-1477-11eb-8a5f-8911bc454336.jpg)      
 *render instance annoatation, RGB image and depth in one line code*
 
 ## ▮ Features
@@ -15,6 +15,8 @@
  - [x] Pre-define domain randomization: textures
  - [x] To cityscape format
  - [ ] To coco format
+
+**News:** [We win 🥈2nd place in IROS 2020 Open Cloud Robot Table Organization Challenge (OCRTOC)](https://github.com/DIYer22/bpycv/issues/15)
 
 ## ▮ Install
 `bpycv` support Blender 2.8, 2.9
