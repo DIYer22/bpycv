@@ -13,8 +13,8 @@
  - [x] Pre-define domain randomization: background
  - [x] Pre-define domain randomization: distractor
  - [x] Pre-define domain randomization: textures
- - [x] To cityscape format
- - [ ] To coco format
+ - [x] To Cityscapes format
+ - [ ] To COCO format
 
 **News:** [We win 🥈2nd place in IROS 2020 Open Cloud Robot Table Organization Challenge (OCRTOC)](https://github.com/DIYer22/bpycv/issues/15)
 
