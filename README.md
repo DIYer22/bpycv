@@ -93,6 +93,7 @@ Open `./demo-vis(inst_rgb_depth).jpg`:
 ![demo-vis(inst_rgb_depth)](https://user-images.githubusercontent.com/10448025/96727938-322abe80-13e6-11eb-9888-58886e8e68fd.jpg)
 
 #### 2. YCB Demo
+Inculding domain randomization for background, light, and distractor.
 ```shell
 mkdir ycb_demo
 cd ycb_demo/
@@ -118,10 +119,6 @@ YCB demo code: [example/ycb_demo.py](example/ycb_demo.py)
 <img src="https://user-images.githubusercontent.com/10448025/74708759-5e3ee000-5258-11ea-8849-0174c34d507c.png" style="width:300px">
 
 Generate and visualize 6DoF pose GT: [example/6d_pose_demo.py](example/6d_pose_demo.py)
-
-#### 4. Domain Randomization Demo
-
-To be done....
 
 ## ▮ Tips
  > Blender may can't direct load `.obj` and `.dea` file from YCB and ShapeNet dataset.  
