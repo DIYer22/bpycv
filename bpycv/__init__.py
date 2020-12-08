@@ -29,14 +29,13 @@ from .render_utils import (
     render_image,
     render_data,
 )
-from .pose_utils import get_6d_pose
 from .scene_setting import (
-    set_cam_pose,
-    set_cam_intrinsic,
     remove_useless_data,
     clear_all,
     set_shading_mode,
     add_stage,
 )
+from .camera_utils import set_cam_pose, set_cam_intrinsic
+from .pose_utils import get_6d_pose
 from .physic_utils import set_origin_and_record_old_v0
 from .domain_randomzition import texture_bsdf_dr, load_distractor
