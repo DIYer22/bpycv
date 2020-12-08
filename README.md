@@ -3,7 +3,7 @@
 ### Contents: [Features](#-features) | [Install](#-install) | [Fast Demo](#-fast-demo) | [Tips](#-tips) 
 
 ![0](https://user-images.githubusercontent.com/10448025/96836463-98135680-1477-11eb-8a5f-8911bc454336.jpg)      
-*render instance annoatation, RGB image and depth in one line code*
+*Render instance annoatation, RGB image and depth in one line code*
 
 ## ▮ Features
  - [x] Render depth
@@ -11,7 +11,7 @@
  - [x] Generate 6DoF pose GT
  - [x] Pre-define domain randomization: light
  - [x] Pre-define domain randomization: background
- - [x] Pre-define domain randomization: distractor
+ - [x] Pre-define domain randomization: [distractors](https://arxiv.org/pdf/1804.06516)
  - [x] Pre-define domain randomization: textures
  - [x] To Cityscapes format
  - [ ] To COCO format

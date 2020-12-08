@@ -13,8 +13,10 @@
    - https://github.com/DLR-RM/BlenderProc
    - https://github.com/Cartucho/vision_blender
    - https://github.com/cheind/pytorch-blender
+   - https://github.com/kopernikusai/shapes3d
 
 ## Done
+ - [x] add `camera_utils.py` with `set/get_cam_intrinsic`
  - [x] project example: YCB model example
  - [x] pre-define distractor
  - [x] pre-define domain randomization: texture
