@@ -35,7 +35,7 @@ from .scene_setting import (
     set_shading_mode,
     add_stage,
 )
-from .camera_utils import set_cam_pose, set_cam_intrinsic
+from .camera_utils import set_cam_pose, set_cam_intrinsic, get_cam_intrinsic
 from .pose_utils import get_6d_pose
 from .physic_utils import set_origin_and_record_old_v0
 from .domain_randomzition import texture_bsdf_dr, load_distractor
