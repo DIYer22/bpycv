@@ -16,6 +16,7 @@
    - https://github.com/kopernikusai/shapes3d
 
 ## Done
+ - [x] support docker
  - [x] add `camera_utils.py` with `set/get_cam_intrinsic`
  - [x] project example: YCB model example
  - [x] pre-define distractor

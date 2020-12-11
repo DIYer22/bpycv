@@ -1,4 +1,4 @@
-# docker build -t bpycv ./ && docker run -v /tmp/bpycv:/tmp -it bpycv
+# git clone https://github.com/DIYer22/bpycv && cd bpycv && docker build -t bpycv ./ && docker run -v /tmp:/tmp -it bpycv
 
 FROM nytimes/blender:2.91-gpu-ubuntu18.04
 

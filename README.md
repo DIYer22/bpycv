@@ -8,11 +8,12 @@
 ## ▮ Features
  - [x] Render depth
  - [x] Render annotations for semantic segmentation, instance segmentation, and panoptic segmentation 
- - [x] Generate 6DoF pose GT
+ - [x] Generate 6DoF pose ground truth
  - [x] Pre-define domain randomization: light
  - [x] Pre-define domain randomization: background
  - [x] Pre-define domain randomization: [distractors](https://arxiv.org/pdf/1804.06516)
  - [x] Pre-define domain randomization: textures
+ - [x] Support docker: `docker run -v /tmp:/tmp diyer22/bpycv`
  - [x] To Cityscapes format
  - [ ] To COCO format
 
