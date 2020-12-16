@@ -14,7 +14,7 @@ with inpkg():
 
 import os
 import cv2
-import OpenEXR
+import bpy
 import scipy.io
 
 
@@ -80,7 +80,7 @@ class ImageWithAnnotation(dict):
         ).astype(np.uint8)
         return vis
 
-    def save(self, dataset_dir="dataset", fname="0"):
+    def save(self, dataset_dir="dataset", fname="0", save_blend=False):
         fname = str(fname)
         if self.get("inst") is not None:
             inst_dir = pathjoin(dataset_dir, "instance_map")
@@ -106,6 +106,11 @@ class ImageWithAnnotation(dict):
             os.makedirs(pose_dir, exist_ok=True)
             pose_path = pathjoin(pose_dir, fname + ".mat")
             scipy.io.savemat(pose_path, self["ycb_6d_pose"])
+        if save_blend:
+            blend_dir = pathjoin(dataset_dir, "blend")
+            os.makedirs(blend_dir, exist_ok=True)
+            blend_path = pathjoin(blend_dir, fname + ".blend")
+            bpy.ops.wm.save_mainfile(filepath=blend_path)
         # save image at last for unstable compute enviroment
         if self.get("image") is not None:
             image_dir = pathjoin(dataset_dir, "image")
@@ -115,6 +120,8 @@ class ImageWithAnnotation(dict):
 
 
 def parser_exr(exr_path):
+    import OpenEXR
+
     file = OpenEXR.InputFile(exr_path)
     header = file.header()
 
