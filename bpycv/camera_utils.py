@@ -8,6 +8,10 @@ import random
 import mathutils
 
 
+def get_cams():
+    return [obj for obj in bpy.data.objects if obj.type == "CAMERA"]
+
+
 def set_cam_pose(cam_radius=1, cam_deg=45, cam_x_deg=None, cam=None):
     cam_rad = deg2rad(cam_deg)
     if cam_x_deg is None:
@@ -17,7 +21,7 @@ def set_cam_pose(cam_radius=1, cam_deg=45, cam_x_deg=None, cam=None):
     xy = (cam_radius ** 2 - z ** 2) ** 0.5
     x = xy * np.cos(cam_x_rad)
     y = xy * np.sin(cam_x_rad)
-    cam = cam or bpy.data.objects["Camera"]
+    cam = cam or get_cams()[0]
     cam.location = x, y, z
     cam.rotation_euler = pi / 2 - cam_rad, 0.1, pi / 2 + cam_x_rad
     cam.scale = (0.1,) * 3
@@ -60,7 +64,7 @@ def get_cam_intrinsic(cam=None):
     we could also define the camera matrix
     https://blender.stackexchange.com/questions/38009/3x4-camera-matrix-from-blender-camera
     """
-    cam = cam or bpy.data.objects["Camera"]
+    cam = cam or get_cams()[0]
     f_in_mm = cam.data.lens
     scene = bpy.context.scene
     resolution_x_in_px = scene.render.resolution_x
