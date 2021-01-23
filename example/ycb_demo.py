@@ -73,7 +73,7 @@ for i in range(20):
 result = bpycv.render_data()
 
 dataset_dir = os.path.abspath("dataset")
-result.save(dataset_dir=dataset_dir, fname="0")
+result.save(dataset_dir=dataset_dir, fname="0", save_blend=True)
 print(f'Save to "{dataset_dir}"')
 os.system(f'tree "{dataset_dir}"')
 print(f'Open "{dataset_dir}/vis/" to see visualize result.')
