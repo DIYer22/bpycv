@@ -69,10 +69,13 @@ def get_K_world_to_cam(camera):
     }
 
 
-def matrix_world_for_old_origin(matrix_world, obj):
+def matrix_world_for_old_origin(obj):
+    matrix_world = obj.matrix_world.copy()
     old_v0 = obj[OLD_V0_KEY]
     to_default_origin_vector = obj.data.vertices[0].co - mathutils.Vector(old_v0)
-    matrix_world.translation = matrix_world.translation + to_default_origin_vector
+    matrix_world.translation = (
+        matrix_world.translation + matrix_world.to_3x3() @ to_default_origin_vector
+    )
     return matrix_world
 
 
@@ -109,7 +112,7 @@ def get_6d_pose(objs, inst=None, camera=None):
 
             matrix_world = obj.matrix_world.copy()
             if OLD_V0_KEY in obj:
-                matrix_world = matrix_world_for_old_origin(matrix_world, obj)
+                matrix_world = matrix_world_for_old_origin(obj)
 
             pose = np.dot(meta["world_to_cam"], matrix_world)[:3]
             meta["poses"].append(pose[..., None])

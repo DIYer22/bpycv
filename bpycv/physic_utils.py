@@ -10,26 +10,9 @@ OLD_V0_KEY = "old_object.data.vertices[0].co"
 
 
 def set_origin_and_record_old_v0(obj, type="ORIGIN_CENTER_OF_VOLUME", center="MEDIAN"):
-    # from .render_utils import befor_render_data_hooks
-    # if SET_ORIGIN_HOOK_NAME not in befor_render_data_hooks:
-    #     befor_render_data_hooks[SET_ORIGIN_HOOK_NAME] = set_back_origin
     obj[OLD_V0_KEY] = obj.data.vertices[0].co.copy()
     with activate_obj(obj):
         bpy.ops.object.origin_set(type=type, center=center)
-
-
-def set_back_origin():
-    """
-    TODO: del
-    """
-    for obj in bpy.data.objects:
-        if OLD_V0_KEY in obj:
-            old_v0 = obj.pop(OLD_V0_KEY)
-            to_default_origin_vector = obj.data.vertices[0].co - mathutils.Vector(
-                old_v0
-            )
-            print(to_default_origin_vector)
-            set_origin_by_vector(obj, to_default_origin_vector)
 
 
 def set_origin_by_vector(obj, new_origin_vector):
