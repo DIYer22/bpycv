@@ -5,8 +5,7 @@
 @mail: ylxx@live.com
 Created on Thu Jan 16 18:17:20 2020
 """
-
-from boxx import *
+import boxx
 
 import bpy
 
@@ -93,5 +92,29 @@ def add_stage(size=2, transparency=False):
     return stage
 
 
+def add_environment_box(xyz=(2, 2, 2), thickness=0.2, transparency=False):
+    import bpycv
+
+    xyz = boxx.Vector(xyz)
+    thickness += 1
+    box = add_stage(size=1, transparency=transparency)
+    box.rigid_body.collision_shape = "MESH"
+    box.scale = xyz * thickness
+    bpy.ops.mesh.primitive_cube_add(size=1, location=(0, 0, xyz.z / 2))
+    cube = bpy.context.object
+    box.location.z = cube.location.z - xyz.z * (thickness - 0.99)
+    cube.scale = xyz
+    with bpycv.activate_obj(box):
+        bpy.ops.object.modifier_add(type="BOOLEAN")
+        modifier = box.modifiers[-1]
+        modifier.object = cube
+        modifier.operation = "DIFFERENCE"
+        bpy.ops.object.modifier_apply(apply_as="DATA", modifier=modifier.name)
+    bpycv.remove_obj(cube)
+    return box
+
+
 if __name__ == "__main__":
+    from boxx import *
+
     pass

@@ -34,6 +34,7 @@ from .scene_setting import (
     clear_all,
     set_shading_mode,
     add_stage,
+    add_environment_box,
 )
 from .camera_utils import get_cams, set_cam_pose, set_cam_intrinsic, get_cam_intrinsic
 from .pose_utils import get_6d_pose
