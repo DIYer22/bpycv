@@ -109,12 +109,13 @@ def add_environment_box(xyz=(2, 2, 2), thickness=0.2, transparency=False):
         modifier = box.modifiers[-1]
         modifier.object = cube
         modifier.operation = "DIFFERENCE"
-        bpy.ops.object.modifier_apply(apply_as="DATA", modifier=modifier.name)
+        if bpy.app.version >= (2, 91, 0):
+            bpy.ops.object.modifier_apply(modifier=modifier.name)
+        else:
+            bpy.ops.object.modifier_apply(apply_as="DATA", modifier=modifier.name)
     bpycv.remove_obj(cube)
     return box
 
 
 if __name__ == "__main__":
-    from boxx import *
-
     pass
