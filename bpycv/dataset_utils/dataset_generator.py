@@ -56,7 +56,7 @@ class MetaDatasetGenerator:
         keys = range(self.cfg.IMG_NUM)
 
         if self.cfg.DEBUG:
-            self.generate_one(abs_dir, str(time.time()))
+            self.generate_one(abs_dir, str(int(time.time())))
             boxx.pred(abs_dir)
             return
         keys = self.resample_keys(keys)

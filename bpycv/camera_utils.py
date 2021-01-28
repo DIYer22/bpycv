@@ -13,6 +13,24 @@ def get_cams():
 
 
 def set_cam_pose(cam_radius=1, cam_deg=45, cam_x_deg=None, cam=None):
+    """
+    Set the camera pose according to the shape of hemisphere.
+
+    Parameters
+    ----------
+    cam_radius : float, optional
+        The distance of the camera from the origin 0,0,0. The default is 1m.
+    cam_deg : float, optional
+        The angle between the optical center and the XY-plane. The default is 45°.
+    cam_x_deg : float, optional
+        The angle between the optical center and the X-axis. The default is None.
+    cam : Camera object, optional
+        The default is first camera object.
+
+    Returns
+    -------
+    cam : Camera object
+    """
     cam_rad = deg2rad(cam_deg)
     if cam_x_deg is None:
         cam_x_deg = random.uniform(0, 360)
