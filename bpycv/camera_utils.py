@@ -48,13 +48,6 @@ def set_cam_pose(cam_radius=1, cam_deg=45, cam_x_deg=None, cam=None):
 
 def get_cam_intrinsic(cam=None):
     """
-    K =[[s_u, 0, u_0],
-        [0, s_v, v_0],
-        [0,   0,   1]]
-    or
-    K =[[f_x, 0, c_x],
-        [0, f_y, c_y],
-        [0,   0,   1]]
     Refrence:
         https://blender.stackexchange.com/a/120063/86396
     """
@@ -108,9 +101,17 @@ def get_cam_intrinsic(cam=None):
     return K
 
 
-def set_cam_intrinsic(cam, intrinsic_K, hw=None):
+def set_cam_intrinsic(cam, K, hw=None):
     """
     Invert the function get_cam_intrinsic
+    
+    K =[[s_u, 0, u_0],
+        [0, s_v, v_0],
+        [0,   0,   1]]
+    or
+    K =[[f_x, 0, c_x],
+        [0, f_y, c_y],
+        [0,   0,   1]]
     """
     scene = bpy.context.scene
     camd = cam.data
@@ -123,14 +124,14 @@ def set_cam_intrinsic(cam, intrinsic_K, hw=None):
     else:
         scene.render.resolution_y, scene.render.resolution_x = hw
     near = lambda x, y=0, eps=1e-5: abs(x - y) < eps
-    assert near(intrinsic_K[0][1], 0)
-    assert near(intrinsic_K[1][0], 0)
+    assert near(K[0][1], 0)
+    assert near(K[1][0], 0)
 
     h, w = hw
-    s_u = intrinsic_K[0][0]  # f_x
-    s_v = intrinsic_K[1][1]  # f_y
-    u_0 = intrinsic_K[0][2]  # c_x
-    v_0 = intrinsic_K[1][2]  # c_y
+    s_u = K[0][0]  # f_x
+    s_v = K[1][1]  # f_y
+    u_0 = K[0][2]  # c_x
+    v_0 = K[1][2]  # c_y
     scene.render.pixel_aspect_x = s_v / min(s_u, s_v)
     scene.render.pixel_aspect_y = s_u / min(s_u, s_v)
     pixel_aspect_ratio = s_u / s_v
