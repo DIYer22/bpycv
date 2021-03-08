@@ -46,72 +46,97 @@ def set_cam_pose(cam_radius=1, cam_deg=45, cam_x_deg=None, cam=None):
     return cam
 
 
+def get_cam_intrinsic(cam=None):
+    """
+    K =[[s_u, 0, u_0],
+        [0, s_v, v_0],
+        [0,   0,   1]]
+    or
+    K =[[f_x, 0, c_x],
+        [0, f_y, c_y],
+        [0,   0,   1]]
+    Refrence:
+        https://blender.stackexchange.com/a/120063/86396
+    """
+    # BKE_camera_sensor_size
+    def get_sensor_size(sensor_fit, sensor_x, sensor_y):
+        if sensor_fit == "VERTICAL":
+            return sensor_y
+        return sensor_x
+
+    # BKE_camera_sensor_fit
+    def get_sensor_fit(sensor_fit, size_x, size_y):
+        if sensor_fit == "AUTO":
+            if size_x >= size_y:
+                return "HORIZONTAL"
+            else:
+                return "VERTICAL"
+        return sensor_fit
+
+    cam = cam or get_cams()[0]
+    camd = cam.data
+    if camd.type != "PERSP":
+        raise ValueError("Non-perspective cameras not supported")
+    scene = bpy.context.scene
+    f_in_mm = camd.lens
+    scale = scene.render.resolution_percentage / 100
+    resolution_x_in_px = scale * scene.render.resolution_x
+    resolution_y_in_px = scale * scene.render.resolution_y
+    sensor_size_in_mm = get_sensor_size(
+        camd.sensor_fit, camd.sensor_width, camd.sensor_height
+    )
+    sensor_fit = get_sensor_fit(
+        camd.sensor_fit,
+        scene.render.pixel_aspect_x * resolution_x_in_px,
+        scene.render.pixel_aspect_y * resolution_y_in_px,
+    )
+    pixel_aspect_ratio = scene.render.pixel_aspect_y / scene.render.pixel_aspect_x
+    if sensor_fit == "HORIZONTAL":
+        view_fac_in_px = resolution_x_in_px
+    else:
+        view_fac_in_px = pixel_aspect_ratio * resolution_y_in_px
+    pixel_size_mm_per_px = sensor_size_in_mm / f_in_mm / view_fac_in_px
+    s_u = 1 / pixel_size_mm_per_px
+    s_v = 1 / pixel_size_mm_per_px / pixel_aspect_ratio
+
+    # Parameters of intrinsic calibration matrix K
+    u_0 = resolution_x_in_px / 2 - camd.shift_x * view_fac_in_px
+    v_0 = resolution_y_in_px / 2 + camd.shift_y * view_fac_in_px / pixel_aspect_ratio
+    skew = 0  # only use rectangular pixels
+
+    K = mathutils.Matrix(((s_u, skew, u_0), (0, s_v, v_0), (0, 0, 1)))
+    return K
+
+
 def set_cam_intrinsic(cam, intrinsic_K, hw=None):
     """
-    K = [[f_x, 0, c_x],
-     [0, f_y, c_y],
-     [0,   0,   1]]
-
-    Refrence: https://www.rojtberg.net/1601/from-blender-to-opencv-camera-and-back/
+    Invert the function get_cam_intrinsic
     """
+    scene = bpy.context.scene
+    camd = cam.data
+    camd.sensor_fit = "HORIZONTAL"
+    camd.sensor_width = 10
+    scene.render.resolution_percentage = 100
+
     if hw is None:
-        scene = bpy.context.scene
         hw = scene.render.resolution_y, scene.render.resolution_x
+    else:
+        scene.render.resolution_y, scene.render.resolution_x = hw
     near = lambda x, y=0, eps=1e-5: abs(x - y) < eps
     assert near(intrinsic_K[0][1], 0)
     assert near(intrinsic_K[1][0], 0)
+
     h, w = hw
-    f_x = intrinsic_K[0][0]
-    f_y = intrinsic_K[1][1]
-    c_x = intrinsic_K[0][2]
-    c_y = intrinsic_K[1][2]
-
-    cam = cam.data
-    cam.shift_x = -(c_x / w - 0.5)
-    cam.shift_y = (c_y - 0.5 * h) / w
-
-    cam.lens = f_x / w * cam.sensor_width
-
-    pixel_aspect = f_y / f_x
-    scene.render.pixel_aspect_x = 1.0
-    scene.render.pixel_aspect_y = pixel_aspect
-
-
-def get_cam_intrinsic(cam=None):
-    """
-    we could also define the camera matrix
-    https://blender.stackexchange.com/questions/38009/3x4-camera-matrix-from-blender-camera
-    """
-    cam = cam or get_cams()[0]
-    f_in_mm = cam.data.lens
-    scene = bpy.context.scene
-    resolution_x_in_px = scene.render.resolution_x
-    resolution_y_in_px = scene.render.resolution_y
-    scale = scene.render.resolution_percentage / 100
-    sensor_width_in_mm = cam.data.sensor_width
-    sensor_height_in_mm = cam.data.sensor_height
-    pixel_aspect_ratio = scene.render.pixel_aspect_x / scene.render.pixel_aspect_y
-
-    if cam.data.sensor_fit == "VERTICAL":
-        # the sensor height is fixed (sensor fit is horizontal),
-        # the sensor width is effectively changed with the pixel aspect ratio
-        s_u = resolution_x_in_px * scale / sensor_width_in_mm / pixel_aspect_ratio
-        s_v = resolution_y_in_px * scale / sensor_height_in_mm
-    else:  # 'HORIZONTAL' and 'AUTO'
-        # the sensor width is fixed (sensor fit is horizontal),
-        # the sensor height is effectively changed with the pixel aspect ratio
-        s_u = resolution_x_in_px * scale / sensor_width_in_mm
-        s_v = resolution_y_in_px * scale * pixel_aspect_ratio / sensor_height_in_mm
-
-    # Parameters of intrinsic calibration matrix K
-    alpha_u = f_in_mm * s_u
-    alpha_v = f_in_mm * s_u
-    u_0 = resolution_x_in_px * scale / 2
-    v_0 = resolution_y_in_px * scale / 2
-    skew = 0  # only use rectangular pixels
-
-    K = mathutils.Matrix(((alpha_u, skew, u_0), (0, alpha_v, v_0), (0, 0, 1)))
-    return K
+    s_u = intrinsic_K[0][0]  # f_x
+    s_v = intrinsic_K[1][1]  # f_y
+    u_0 = intrinsic_K[0][2]  # c_x
+    v_0 = intrinsic_K[1][2]  # c_y
+    scene.render.pixel_aspect_x = s_v / min(s_u, s_v)
+    scene.render.pixel_aspect_y = s_u / min(s_u, s_v)
+    pixel_aspect_ratio = s_u / s_v
+    camd.lens = s_u * camd.sensor_width / w
+    camd.shift_x = (w / 2 - u_0) / w
+    camd.shift_y = (v_0 - h / 2) / w * pixel_aspect_ratio
 
 
 if __name__ == "__main__":
