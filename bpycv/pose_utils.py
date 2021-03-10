@@ -79,6 +79,16 @@ def matrix_world_for_old_origin(obj):
     return matrix_world
 
 
+T_bcam2cv = np.array(((1, 0, 0, 0), (0, -1, 0, 0), (0, 0, -1, 0), (0, 0, 0, 1)))
+
+
+def set_pose_in_cam(obj, pose_Rt, cam):
+    if len(pose_Rt) == 3:
+        pose_Rt = np.append(pose_Rt, [[0, 0, 0, 1]], 0)
+    matrix_world = npa(cam.matrix_world) @ T_bcam2cv.T @ pose_Rt
+    obj.matrix_world = matrix_world
+
+
 def get_6d_pose(objs, inst=None, camera=None):
     def inst_id_to_area(inst_id):
         if inst is None:

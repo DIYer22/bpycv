@@ -37,6 +37,6 @@ from .scene_setting import (
     add_environment_box,
 )
 from .camera_utils import get_cams, set_cam_pose, set_cam_intrinsic, get_cam_intrinsic
-from .pose_utils import get_6d_pose
+from .pose_utils import get_6d_pose, set_pose_in_cam
 from .physic_utils import set_origin_and_record_old_v0
 from .domain_randomzition import texture_bsdf_dr, load_distractor
