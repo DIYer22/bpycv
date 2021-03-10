@@ -6,7 +6,7 @@ bpycv: computer vision utils for Blender
 
 from .__info__ import __version__
 
-from .utils import ipython
+from .utils import ipython, objects_to_locals
 from .hdri_manager import HdriManager
 from .node_graph import activate_node_tree, Node
 from .exr_image_parser import parser_exr
