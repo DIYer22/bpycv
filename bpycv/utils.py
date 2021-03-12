@@ -107,13 +107,13 @@ def objects_to_locals(log=True):
     """
     Add variables which are objects name and ref objects to python console when debug.
     """
-    frame = sys._getframe(0)
+    frame = sys._getframe(1)
     local_vars = frame.f_locals
     new = {name.replace(".", "_"): obj for name, obj in bpy.data.objects.items()}
     local_vars.update(new)
     if log:
         print("New variables:")
-        print("\t", list(new))
+        print("\t", ", ".join(new))
 
 
 if __name__ == "__main__":

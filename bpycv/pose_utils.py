@@ -18,6 +18,8 @@ from .physic_utils import OLD_V0_KEY
 from .camera_utils import get_cam_intrinsic
 
 
+T_bcam2cv = np.array(((1, 0, 0, 0), (0, -1, 0, 0), (0, 0, -1, 0), (0, 0, 0, 1)))
+
 # Returns camera rotation and translation matrices from Blender.
 #
 # There are 3 coordinate systems involved:
@@ -79,14 +81,42 @@ def matrix_world_for_old_origin(obj):
     return matrix_world
 
 
-T_bcam2cv = np.array(((1, 0, 0, 0), (0, -1, 0, 0), (0, 0, -1, 0), (0, 0, 0, 1)))
+def homo_coord(points_or_Rt):
+    """
+    homogeneous coordinates
+    """
+    if points_or_Rt.shape == (3, 4):
+        return np.append(points_or_Rt, [[0, 0, 0, 1]], 0)
+    elif points_or_Rt.shape[-1] in {2, 3}:
+        return np.append(points_or_Rt, [[1]] * len(points_or_Rt), 1)
+    return points_or_Rt
+
+
+def set_matrix_world(obj, matrix_world):
+    """
+    Seems only set pose by obj.location and obj.rotation_euler 
+    """
+    if len(matrix_world) == 3:
+        matrix_world = homo_coord(matrix_world)
+    obj.location, quaternion, obj.scale = mathutils.Matrix(matrix_world).decompose()
+    obj.rotation_euler = quaternion.to_euler()
+    return obj
+
+
+def get_pose_in_cam(obj, cam):
+    pose_RT = (
+        T_bcam2cv
+        @ np.linalg.inv(np.array(cam.matrix_world))
+        @ np.array(obj.matrix_world)
+    )
+    return pose_RT[:3]
 
 
 def set_pose_in_cam(obj, pose_Rt, cam):
     if len(pose_Rt) == 3:
-        pose_Rt = np.append(pose_Rt, [[0, 0, 0, 1]], 0)
+        pose_Rt = homo_coord(pose_Rt)
     matrix_world = npa(cam.matrix_world) @ T_bcam2cv.T @ pose_Rt
-    obj.matrix_world = matrix_world
+    set_matrix_world(obj, matrix_world)
 
 
 def get_6d_pose(objs, inst=None, camera=None):
