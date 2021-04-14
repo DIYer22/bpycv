@@ -6,37 +6,54 @@
 Created on Thu Dec 26 18:15:47 2019
 """
 from boxx import *
-from boxx import np, inpkg, greyToRgb, histEqualize, pathjoin, savenp
+from boxx import greyToRgb, histEqualize, inpkg, np, pathjoin, savenp
 
 with inpkg():
     from .pseudo_color import heatmap_to_pseudo_color
     from .utils import encode_inst_id
 
 import os
-import cv2
+
 import bpy
+import cv2
+import minexr
 import scipy.io
 
 
-class ExrDict(dict):
+class ExrReader(minexr.reader.MinExrReader):
+    def _read_image(self):
+        '''
+        Override original _read_image, since that one assumes ims are float16 but we use float32 here
+        '''
+        H,C,W = self.shape
+
+        dtype  = self.channel_types[0]
+        DS = np.dtype(dtype).itemsize
+        SOFF = 8+DS*W*C        
+        strides = (SOFF, DS*W, DS)
+        nbytes = SOFF*H
+
+        self.fp.seek(self.first_offset, 0)
+        image = np.frombuffer(self.fp.read(nbytes), dtype=dtype, count=-1, offset=8)
+        self.image = np.lib.stride_tricks.as_strided(image, (H,C,W), strides)   
+
+class ExrImage:
     LIMIT_DEPTH = 6e4
 
-    def __getattribute__(self, key):
-        if key in self:
-            return self[key]
-        return dict.__getattribute__(self, key)
+    def __init__(self, fp):
+        self.reader = ExrReader(fp)
 
     def get_rgb(self):
-        return np.concatenate(
-            [self["R"][..., None], self["G"][..., None], self["B"][..., None]], -1
-        )
+        return self.reader.select(["R", "G", "B"]).copy()
 
     def get_rgba(self):
-        return np.concatenate([self.get_rgb(), self["A"][..., None]], -1)
+        return self.reader.select(["R", "G", "B", "A"]).copy()
 
     def get_pseudo_color(self):
-        limit_mask = self["Z"] < self.LIMIT_DEPTH
-        depth = self["Z"] * limit_mask
+        depth = self.reader.select(["Z"])[..., 0].copy()
+        print(depth.shape)
+        limit_mask = depth < self.LIMIT_DEPTH
+        depth = depth * limit_mask
         depth = depth / depth.max()
         depth[~limit_mask] = 1.1
         depth = 1 - depth
@@ -44,12 +61,14 @@ class ExrDict(dict):
 
     def get_depth(self):
         # turn inf depth to 0
-        limit_mask = self["Z"] < self.LIMIT_DEPTH
-        depth = self["Z"] * limit_mask
+        depth = self.reader.select(["Z"])[..., 0].copy()
+        limit_mask = depth < self.LIMIT_DEPTH
+        depth = depth * limit_mask
         return depth
 
     def get_inst(self):
         rgb = self.get_rgb()
+        print(rgb.shape, rgb.dtype, np.mean(rgb))
         inst = encode_inst_id.rgb_to_id(rgb)
 
         # if world.use_nodes is False, Blender will set background as a gray (0.05087609, 0.05087609, 0.05087609)
@@ -120,26 +139,17 @@ class ImageWithAnnotation(dict):
 
 
 def parser_exr(exr_path):
-    import OpenEXR
+    with open(exr_path, "rb") as fp:
+        exr = ExrImage(fp)
 
-    file = OpenEXR.InputFile(exr_path)
-    header = file.header()
-
-    h, w = header["displayWindow"].max.y + 1, header["displayWindow"].max.x + 1
-    exr = ExrDict()
-    for key in header["channels"]:
-        assert header["channels"][key].type.__str__() == "FLOAT"
-        exr[key] = np.fromstring(file.channel(key), dtype=np.float32).reshape(h, w)
-    file.close()
     return exr
-
 
 def test_parser_exr(exr_path="../tmp_exrs/cycles.exr"):
     return parser_exr(exr_path)
 
 
 if __name__ == "__main__":
-    from boxx import show, imread
+    from boxx import imread, show
 
     exr_path = "tmp_exr.exr"
     exr_path = "../tmp_exrs/untitled.exr"
