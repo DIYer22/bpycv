@@ -51,7 +51,6 @@ class ExrImage:
 
     def get_pseudo_color(self):
         depth = self.reader.select(["Z"]).copy()
-        print(depth.shape)
         limit_mask = depth < self.LIMIT_DEPTH
         depth = depth * limit_mask
         depth = depth / depth.max()
@@ -68,7 +67,6 @@ class ExrImage:
 
     def get_inst(self):
         rgb = self.get_rgb()
-        print(rgb.shape, rgb.dtype, np.mean(rgb))
         inst = encode_inst_id.rgb_to_id(rgb)
 
         # if world.use_nodes is False, Blender will set background as a gray (0.05087609, 0.05087609, 0.05087609)
