@@ -50,7 +50,7 @@ class ExrImage:
         return self.reader.select(["R", "G", "B", "A"]).copy()
 
     def get_pseudo_color(self):
-        depth = self.reader.select(["Z"])[..., 0].copy()
+        depth = self.reader.select(["Z"]).copy()
         print(depth.shape)
         limit_mask = depth < self.LIMIT_DEPTH
         depth = depth * limit_mask
@@ -61,7 +61,7 @@ class ExrImage:
 
     def get_depth(self):
         # turn inf depth to 0
-        depth = self.reader.select(["Z"])[..., 0].copy()
+        depth = self.reader.select(["Z"]).copy()
         limit_mask = depth < self.LIMIT_DEPTH
         depth = depth * limit_mask
         return depth

@@ -7,8 +7,7 @@ Created on Sat Dec 28 12:23:56 2019
 """
 
 from boxx import *
-from boxx import show, timeit, mg, np, inpkg
-
+from boxx import inpkg, mg, np, show, timeit
 
 turbo_colormap_data = [
     [0.18995, 0.07176, 0.23217],
@@ -303,6 +302,7 @@ turbo_colormap_data_np = np.array(turbo_colormap_data)
 
 
 def heatmap_to_pseudo_color(heatmap):
+    heatmap = heatmap[..., 0]
     x = heatmap
 
     x = x.clip(0, 1)
