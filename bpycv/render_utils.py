@@ -6,17 +6,17 @@
 Created on Sat Dec 28 21:33:28 2019
 """
 
-from boxx import *
-from boxx import os, withattr, imread
-
-import bpy
 import tempfile
 from collections import OrderedDict
 
-from .statu_recover import StatuRecover, undo
-from .exr_image_parser import parser_exr, ImageWithAnnotation
+import bpy
+from boxx import *
+from boxx import imread, os, withattr
+
+from .exr_image_parser import ImageWithAnnotation, parser_exr
 from .material_utils import set_inst_material
 from .pose_utils import get_6d_pose
+from .statu_recover import StatuRecover, undo
 
 
 def set_cycles_compute_device_type(compute_device_type="CUDA"):
@@ -62,8 +62,10 @@ class set_annotation_render(StatuRecover):
 
         attrs = dict(
             file_format="OPEN_EXR",
+            compression=0,
             color_mode="RGBA",
             color_depth="32",
+            exr_codec="NONE",
             use_zbuffer=True,
         )
         self.set_attrs(render.image_settings, attrs)
