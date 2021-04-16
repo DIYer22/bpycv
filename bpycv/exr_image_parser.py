@@ -5,6 +5,7 @@
 @mail: ylxx@live.com
 Created on Thu Dec 26 18:15:47 2019
 """
+import boxx
 from boxx import *
 from boxx import greyToRgb, histEqualize, inpkg, np, pathjoin, savenp
 
@@ -69,8 +70,9 @@ class ExrReader(minexr.reader.MinExrReader):
 class ExrImage:
     LIMIT_DEPTH = 6e4
 
-    def __init__(self, fp):
-        self.reader = ExrReader(fp)
+    def __init__(self, exr_path):
+        with open(exr_path, "rb") as fp:
+            self.reader = ExrReader(fp)
 
     def get_rgb(self):
         return self.reader.select(["R", "G", "B"]).copy()
@@ -79,7 +81,7 @@ class ExrImage:
         return self.reader.select(["R", "G", "B", "A"]).copy()
 
     def get_pseudo_color(self):
-        depth = self.reader.select(["Z"]).copy()
+        depth = self.reader.select(["Z"]).copy().squeeze()
         limit_mask = depth < self.LIMIT_DEPTH
         depth = depth * limit_mask
         depth = depth / depth.max()
@@ -89,7 +91,7 @@ class ExrImage:
 
     def get_depth(self):
         # turn inf depth to 0
-        depth = self.reader.select(["Z"]).copy()
+        depth = self.reader.select(["Z"]).copy().squeeze()
         limit_mask = depth < self.LIMIT_DEPTH
         depth = depth * limit_mask
         return depth
@@ -166,16 +168,7 @@ class ImageWithAnnotation(dict):
 
 
 def parser_exr(exr_path):
-    with open(exr_path, "rb") as fp:
-        # fp.seek(0)        
-        # buf = minexr.buffer.BufferReader(fp.read(10000))
-        # import struct
-
-        # # Magic and version and info bits
-        # magic, version, b2, b3, b4 = struct.unpack('<iB3B', buf.read(8))
-        # print(magic, version, b2, b3, b4)
-        exr = ExrImage(fp)
-
+    exr = ExrImage(exr_path)
     return exr
 
 def test_parser_exr(exr_path="../tmp_exrs/cycles.exr"):
@@ -185,12 +178,10 @@ def test_parser_exr(exr_path="../tmp_exrs/cycles.exr"):
 if __name__ == "__main__":
     from boxx import imread, show
 
-    exr_path = "tmp_exr.exr"
-    exr_path = "../tmp_exrs/untitled.exr"
-    exr_path = "/tmp/blender/tmp.exr"
+    exr_path = "../example/tmp_exr/inst.exr"
     exr = parser_exr(exr_path)
     inst = exr.get_inst()
-    png = imread(exr_path.replace(".exr", ".png"))[..., :3]
+    png = np.uint8(boxx.mapping_array(inst%20, boxx.getDefaultColorList(20))*255)
 
     ann = ImageWithAnnotation(png, exr)
     vis = ann.vis()

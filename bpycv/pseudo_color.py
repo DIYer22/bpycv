@@ -302,7 +302,6 @@ turbo_colormap_data_np = np.array(turbo_colormap_data)
 
 
 def heatmap_to_pseudo_color(heatmap):
-    heatmap = heatmap[..., 0]
     x = heatmap
 
     x = x.clip(0, 1)
