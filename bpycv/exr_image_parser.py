@@ -121,8 +121,7 @@ class ImageWithAnnotation(dict):
         return dict.__getattribute__(self, key)
 
     def vis(self):
-        image = self["image"]
-        depth_vis = self["_raw_exr"].get_pseudo_color()
+        vis_list = []  # RGB float 0.~1.
 
         def vis_inst(inst):
             unique, _idxs = np.unique(inst, return_inverse=True)
@@ -131,10 +130,17 @@ class ImageWithAnnotation(dict):
                 idxs, boxx.getDefaultColorList(len(unique), includeBackGround=True)
             )
 
-        inst_vis = vis_inst(self["inst"])
-        vis = (
-            np.concatenate([inst_vis, image[..., :3] / 255.0, depth_vis], 1) * 255
-        ).astype(np.uint8)
+        if "inst" in self:
+            inst_vis = vis_inst(self["inst"])
+            vis_list.append(inst_vis)
+
+        if self.get("image"):
+            image = self["image"]
+            vis_list.append(image[..., :3] / 255.0)
+
+        depth_vis = self["_raw_exr"].get_pseudo_color()
+        vis_list.append(depth_vis)
+        vis = (np.concatenate(vis_list, 1) * 255).astype(np.uint8)
         return vis
 
     def save(self, dataset_dir="dataset", fname="0", save_blend=False):
