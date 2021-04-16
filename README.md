@@ -9,10 +9,10 @@
  - [x] Render depth
  - [x] Render annotations for semantic segmentation, instance segmentation, and panoptic segmentation 
  - [x] Generate 6DoF pose ground truth
- - [x] Pre-define domain randomization: light
- - [x] Pre-define domain randomization: background
- - [x] Pre-define domain randomization: [distractors](https://arxiv.org/pdf/1804.06516) (e.g. vase, painting, pallet in Figure 1)
- - [x] Pre-define domain randomization: textures
+ - [x] Pre-define domain randomization: 
+    - [light and background](https://github.com/DIYer22/bpycv_example_data/tree/main/background_and_light)
+    - [distractors](https://arxiv.org/pdf/1804.06516) (e.g. vase, painting, pallet in Figure 1)
+    - textures
  - [x] Support docker: `docker run -v /tmp:/tmp diyer22/bpycv`
  - [x] Very easy to install and run demo
  - [x] To Cityscapes format
