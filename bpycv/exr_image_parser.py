@@ -24,48 +24,49 @@ import scipy.io
 
 class ExrReader(minexr.reader.MinExrReader):
     def _read_image(self):
-        '''
+        """
         Override original _read_image, since that one assumes ims are float16 but we use float32 here
-        '''
-        H,C,W = self.shape
+        """
+        H, C, W = self.shape
 
-        dtype  = self.channel_types[0]
+        dtype = self.channel_types[0]
         DS = np.dtype(dtype).itemsize
-        SOFF = 8+DS*W*C        
-        strides = (SOFF, DS*W, DS)
-        nbytes = SOFF*H
+        SOFF = 8 + DS * W * C
+        strides = (SOFF, DS * W, DS)
+        nbytes = SOFF * H
 
         self.fp.seek(self.first_offset, 0)
         image = np.frombuffer(self.fp.read(nbytes), dtype=dtype, count=-1, offset=8)
-        self.image = np.lib.stride_tricks.as_strided(image, (H,C,W), strides)   
-        
+        self.image = np.lib.stride_tricks.as_strided(image, (H, C, W), strides)
+
     def _read_header(self):
-        '''
+        """
         Override original _read_header, since that one doesn't allow for cycles' long attribute names
-        '''
-        self.fp.seek(0)        
+        """
+        self.fp.seek(0)
         buf = minexr.buffer.BufferReader(self.fp.read(10000))
 
         # Magic and version and info bits
-        magic, version, b2, b3, b4 = struct.unpack('<iB3B', buf.read(8))
-        assert magic == 20000630, 'Not an OpenEXR file.'
-        assert b3 == b4 == 0, 'Not a single-part scan line file.'
-        assert b2 in (0, 4), 'Not a single-part scan line file.'
+        magic, version, b2, b3, b4 = struct.unpack("<iB3B", buf.read(8))
+        assert magic == 20000630, "Not an OpenEXR file."
+        assert b3 == b4 == 0, "Not a single-part scan line file."
+        assert b2 in (0, 4), "Not a single-part scan line file."
 
         # Header attributes
         self.attrs = self._read_header_attrs(buf)
 
         # Parse channels and datawindow
-        self.compr = self._parse_compression(self.attrs)        
+        self.compr = self._parse_compression(self.attrs)
         self.channel_names, self.channel_types = self._parse_channels(self.attrs)
-        self.channel_map = {cn:i for i,cn in enumerate(self.channel_names)}
+        self.channel_map = {cn: i for i, cn in enumerate(self.channel_names)}
         H, W = self._parse_data_window(self.attrs)
-        self.shape = (H,len(self.channel_names),W)
+        self.shape = (H, len(self.channel_names), W)
         self.first_offset = self._read_first_offset(buf)
-        
+
         # Assert our assumptions
-        assert self.compr == 0x00, 'Compression not supported.'
-        assert len(set(self.channel_types)) <= 1, 'All channel types must be equal.'
+        assert self.compr == 0x00, "Compression not supported."
+        assert len(set(self.channel_types)) <= 1, "All channel types must be equal."
+
 
 class ExrImage:
     LIMIT_DEPTH = 6e4
@@ -171,6 +172,7 @@ def parser_exr(exr_path):
     exr = ExrImage(exr_path)
     return exr
 
+
 def test_parser_exr(exr_path="../tmp_exrs/cycles.exr"):
     return parser_exr(exr_path)
 
@@ -181,7 +183,7 @@ if __name__ == "__main__":
     exr_path = "../example/tmp_exr/inst.exr"
     exr = parser_exr(exr_path)
     inst = exr.get_inst()
-    png = np.uint8(boxx.mapping_array(inst%20, boxx.getDefaultColorList(20))*255)
+    png = np.uint8(boxx.mapping_array(inst % 20, boxx.getDefaultColorList(20)) * 255)
 
     ann = ImageWithAnnotation(png, exr)
     vis = ann.vis()
