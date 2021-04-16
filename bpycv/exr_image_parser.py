@@ -134,7 +134,7 @@ class ImageWithAnnotation(dict):
             inst_vis = vis_inst(self["inst"])
             vis_list.append(inst_vis)
 
-        if self.get("image"):
+        if self.get("image") is not None:
             image = self["image"]
             vis_list.append(image[..., :3] / 255.0)
 
