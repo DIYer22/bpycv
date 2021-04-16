@@ -8,7 +8,6 @@
  - [ ] answer first result of google: "blender depth python"
  - [ ] to COCO format
  - [ ] make better demo images by `img_switch_special_effect.js`
- - [ ] ~~document and tutorial(still early)~~
  - [ ] difference with:
    - https://github.com/DLR-RM/BlenderProc
    - https://github.com/Cartucho/vision_blender
@@ -16,6 +15,7 @@
    - https://github.com/kopernikusai/shapes3d
 
 ## Done
+ - [x] document and tutorial
  - [x] support docker
  - [x] add `camera_utils.py` with `set/get_cam_intrinsic`
  - [x] project example: YCB model example

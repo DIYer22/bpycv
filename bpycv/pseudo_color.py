@@ -7,8 +7,7 @@ Created on Sat Dec 28 12:23:56 2019
 """
 
 from boxx import *
-from boxx import show, timeit, mg, np, inpkg
-
+from boxx import inpkg, mg, np, show, timeit
 
 turbo_colormap_data = [
     [0.18995, 0.07176, 0.23217],

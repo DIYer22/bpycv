@@ -1,4 +1,5 @@
-openexr
+minexr
 boxx
 beautifulsoup4
 requests
+opencv-python

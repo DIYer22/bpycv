@@ -22,25 +22,12 @@
 ## ▮ Install
 `bpycv` support Blender 2.8, 2.9
 
-Troubleshooting tips: [doc/troubleshooting.md](doc/troubleshooting.md)
-
-#### 1. Install OpenExr
-`bpycv` use OpenExr to extract depth map from Blender
-
-For a Debian-based Linux(Ubuntu):
+Example for Blender 2.92:
 ```bash
-sudo apt-get install libopenexr-dev
-```
-
-For other OS, please follow [OpenExr's instruction](https://excamera.com/sphinx/articles-openexr.html).
-
-#### 2. Install python package
-Example for Blender 2.90:
-```bash
-cd <path to blender>/2.90/python/bin
+cd <path to blender>/2.92/python/bin
 ./python3.7m -m ensurepip  # get pip
 ./python3.7m -m pip install -U pip setuptools wheel 
-./python3.7m -m pip install -U opencv-python openexr bpycv
+./python3.7m -m pip install -U bpycv
 ```
 
 ## ▮ Fast Demo
