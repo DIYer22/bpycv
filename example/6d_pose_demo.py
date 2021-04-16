@@ -23,7 +23,7 @@ def draw_6d_pose(img, xyzs_in_obj, pose, intrinsic, color=(255, 0, 0)):
     xyzs_in_cam = np.dot(xyzs_in_obj, R.T) + T
     xyzs_in_image = np.dot(xyzs_in_cam, intrinsic.T)
     xys_in_image = xyzs_in_image[:, :2] / xyzs_in_image[:, 2:]
-    xys_in_image = xys_in_image.round().astype(np.int)
+    xys_in_image = xys_in_image.round().astype(int)
     for xy in xys_in_image:
         img = cv2.circle(img, tuple(xy), 10, color, -1)
     return img

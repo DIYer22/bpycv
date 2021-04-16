@@ -123,7 +123,15 @@ class ImageWithAnnotation(dict):
     def vis(self):
         image = self["image"]
         depth_vis = self["_raw_exr"].get_pseudo_color()
-        inst_vis = greyToRgb(histEqualize(self["inst"]))
+
+        def vis_inst(inst):
+            unique, _idxs = np.unique(inst, return_inverse=True)
+            idxs = _idxs.reshape(inst.shape)
+            return boxx.mapping_array(
+                idxs, boxx.getDefaultColorList(len(unique), includeBackGround=True)
+            )
+
+        inst_vis = vis_inst(self["inst"])
         vis = (
             np.concatenate([inst_vis, image[..., :3] / 255.0, depth_vis], 1) * 255
         ).astype(np.uint8)

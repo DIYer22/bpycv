@@ -5,7 +5,6 @@
 @mail: ylxx@live.com
 Created on Sat Dec 28 20:39:59 2019
 """
-import bpy
 import sys
 import boxx
 from boxx import np
@@ -75,7 +74,7 @@ class encode_inst_id:
 
     @classmethod
     def test(cls):
-        inst0 = np.arange(-100, 10000)
+        inst0 = np.arange(-100, 210000)
         inst1 = np.random.randint(
             -cls.max_denominator / 2, cls.max_denominator / 2, (10000)
         )
@@ -89,8 +88,8 @@ class encode_inst_id:
                 rgb = encode_inst_id.id_to_rgb(inst_id).astype(np.float32)
                 # print(rgb, inst_id)
                 recover = encode_inst_id.rgb_to_id(rgb)
-                boxx.mg()
                 assert recover == inst_id, (inst_id, recover)
+            boxx.mg()
 
         assert (
             encode_inst_id.rgb_to_id(np.float32([0, 0, 0])) == 0
@@ -107,6 +106,8 @@ def objects_to_locals(log=True):
     """
     Add variables which are objects name and ref objects to python console when debug.
     """
+    import bpy
+
     frame = sys._getframe(1)
     local_vars = frame.f_locals
     new = {name.replace(".", "_"): obj for name, obj in bpy.data.objects.items()}
