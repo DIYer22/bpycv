@@ -13,6 +13,7 @@
    - https://github.com/Cartucho/vision_blender
    - https://github.com/cheind/pytorch-blender
    - https://github.com/kopernikusai/shapes3d
+   - https://github.com/ZumoLabs/zpy
 
 ## Done
  - [x] document and tutorial
