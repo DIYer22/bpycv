@@ -48,7 +48,7 @@ def is_obj_valid(obj):
 
 class activate_obj(object):
     def __init__(self, obj):
-        self.current_obj = bpy.context.active_object
+        self.current_obj = bpy.context.view_layer.objects.active
         bpy.context.view_layer.objects.active = obj
 
     def __enter__(self):
