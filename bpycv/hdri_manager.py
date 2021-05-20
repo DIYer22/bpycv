@@ -61,7 +61,7 @@ class HdriManager:
             The default is False.
         """
         self.resolution = resolution
-        self.category = category
+        self.category = category.lower().replace("/", "-")
         self.hdri_dir = hdri_dir
         os.makedirs(hdri_dir, exist_ok=True)
         self.downloading = download
@@ -75,7 +75,7 @@ class HdriManager:
         self.set_hdr_paths()
 
     def set_hdr_paths(self):
-        self.hdr_paths = sorted(
+        self.all_paths = sorted(
             sum(
                 [
                     glob.glob(os.path.join(self.hdri_dir, f"*.{ext}"))
@@ -84,6 +84,28 @@ class HdriManager:
                 [],
             )
         )
+        listt = []
+        for path in self.all_paths:
+            fname = boxx.filename(path)
+            name = fname.split(".")[0]
+            listt.append(
+                dict(
+                    name=name,
+                    res=name.split("_")[-1],
+                    cats=fname.split(".")[1].split("="),
+                    tags=fname.split(".")[2].split("="),
+                    path=path,
+                )
+            )
+        self.df = boxx.pd.DataFrame(listt)
+        if self.category == "all":
+            hdr_paths = self.df.path
+        else:
+            hdr_paths = self.df[
+                self.df.cats.apply(lambda cats: self.category in cats)
+            ].path
+
+        self.hdr_paths = sorted(hdr_paths)
 
     def __len__(self):
         if self.downloading:
@@ -115,7 +137,6 @@ class HdriManager:
         url = f"https://hdrihaven.com/hdris/category/?c={category}"
         page = rq.get(url, timeout=5)
         html = BeautifulSoup(page.text, features="html.parser")
-        # '/hdri/?c=indoor&h=colorful_studio'
         hrefs = [a["href"] for a in html.find(id="item-grid").find_all("a")]
 
         names = [url2dict(href)["h"][0] for href in hrefs]
@@ -126,8 +147,7 @@ class HdriManager:
                 if self.debug:
                     print(name)
                 prefix = f"{name}_{resolution}"
-                glob_path = os.path.join(hdri_dir, prefix)
-                paths = boxx.glob(glob_path)
+                paths = boxx.glob(os.path.join(hdri_dir, prefix + "*"))
                 if len(paths):
                     return paths[0]
                 url = f"https://hdrihaven.com/hdri/?h={name}"
@@ -156,8 +176,9 @@ class HdriManager:
                     f.write(r.content)
                 return path
             except Exception as e:
-                pred - name
-                g()
+                if self.debug:
+                    boxx.pred - name
+                    boxx.g()
                 raise e
 
         _names = names[:]
@@ -170,9 +191,21 @@ class HdriManager:
         self.downloading = False
         print("Download hdri threads has finished!")
 
+    @classmethod
+    def test(cls):
+        hdri_dir = "/tmp/hdri"
+        hm = HdriManager(
+            hdri_dir=hdri_dir, category="indoor", download=False, debug=True
+        )
+        for i in range(10):
+            hdri = hm.sample()
+            print(hdri)
+            assert hm.category in hdri
+        boxx.g()
+
 
 if __name__ == "__main__":
     hdri_dir = "/tmp/hdri"
-    hdri_dr = HdriManager(hdri_dir=hdri_dir, download=True, debug=True)
-    hdri = hdri_dr.sample()
+    hm = HdriManager(hdri_dir=hdri_dir, download=True, debug=True)
+    hdri = hm.sample()
     print(hdri)
