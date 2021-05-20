@@ -5,9 +5,9 @@
 @mail: ylxx@live.com
 Created on Sun Jan 12 17:06:39 2020
 """
-
+import boxx
 from boxx import *
-from boxx import os, setTimeout, mapmt, timegap, sleep
+from boxx import os, setTimeout, mapmt, timegap, sleep, pathjoin
 
 import random
 import glob
@@ -34,6 +34,7 @@ class HdriManager:
         resolution="4k",
         category="all",
         download=False,
+        debug=False,
     ):
         """
         Download and manage hdri file from https://hdrihaven.com/hdris/
@@ -64,9 +65,13 @@ class HdriManager:
         self.hdri_dir = hdri_dir
         os.makedirs(hdri_dir, exist_ok=True)
         self.downloading = download
+        self.debug = debug
         if self.downloading:
             print('Starting download ".hdr" file from "hdrihaven.com" in side threads')
-            setTimeout(self.prepare)
+            if debug:
+                self.prepare()
+            else:
+                setTimeout(self.prepare)
         self.set_hdr_paths()
 
     def set_hdr_paths(self):
@@ -116,33 +121,51 @@ class HdriManager:
         names = [url2dict(href)["h"][0] for href in hrefs]
 
         #  'https://hdrihaven.com/files/hdris/tv_studio_4k.hdr'
-        download_urls = [
-            f"https://hdrihaven.com/files/hdris/{name}_{resolution}"  # + .hdr or .exr
-            for name in names
-        ]
+        def download(name):
+            try:
+                if self.debug:
+                    print(name)
+                prefix = f"{name}_{resolution}"
+                glob_path = os.path.join(hdri_dir, prefix)
+                paths = boxx.glob(glob_path)
+                if len(paths):
+                    return paths[0]
+                url = f"https://hdrihaven.com/hdri/?h={name}"
+                html = BeautifulSoup(
+                    rq.get(url, timeout=5).text, features="html.parser",
+                )
+                href = [
+                    a["href"]
+                    for a in html.find_all("a")
+                    if f"_{resolution}." in a.get("href")
+                ][0]
+                cats = [
+                    a.text
+                    for a in html.find(text="Categories:").parent.parent.find_all("a")
+                ]
+                tags = [
+                    a.text for a in html.find(text="Tags:").parent.parent.find_all("a")
+                ]
+                name = f"{prefix}.{'='.join(cats)}.{'='.join(tags)}.{href[-3:]}"
 
-        def download(url):
-            fname = os.path.basename(url)
-            file_path = os.path.join(hdri_dir, fname)
-            for ext in self.exts:
-                path = f"{file_path}.{ext}"
-                if os.path.isfile(path):
-                    return path
-            for ext in self.exts:
-                path = f"{file_path}.{ext}"
-                downlaod_url = f"{url}.{ext}"
-                r = rq.get(downlaod_url, timeout=5)
-                if r.status_code != 200:
-                    continue
+                path = pathjoin(hdri_dir, name)
+                r = rq.get(href, timeout=5)
+                assert r.status_code == 200
                 os.makedirs(hdri_dir, exist_ok=True)
                 with open(path, "wb") as f:
                     f.write(r.content)
                 return path
-            raise Exception(f"Con't download {file_path}")
+            except Exception as e:
+                pred - name
+                g()
+                raise e
 
-        _urls = download_urls[:]
-        random.shuffle(_urls)
-        mapmt(download, _urls, pool=2)
+        _names = names[:]
+        random.shuffle(_names)
+        if self.debug:
+            list(map(download, _names,))
+        else:
+            mapmt(download, _names, pool=1)
         self.set_hdr_paths()
         self.downloading = False
         print("Download hdri threads has finished!")
@@ -150,6 +173,6 @@ class HdriManager:
 
 if __name__ == "__main__":
     hdri_dir = "/tmp/hdri"
-    hdri_dr = HdriManager(hdri_dir=hdri_dir, download=True)
+    hdri_dr = HdriManager(hdri_dir=hdri_dir, download=True, debug=True)
     hdri = hdri_dr.sample()
     print(hdri)
