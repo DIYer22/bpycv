@@ -84,6 +84,10 @@ class HdriManager:
                 [],
             )
         )
+        if self.category == "all":
+            self.hdr_paths = sorted(self.all_paths)
+            return
+
         listt = []
         for path in self.all_paths:
             fname = boxx.filename(path)
