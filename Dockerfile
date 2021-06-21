@@ -10,7 +10,7 @@ RUN apt install git -y
 
 RUN ${BLENDERPY} -m pip install -U pip setuptools wheel 
 RUN ${BLENDERPY} -m pip install -U ipython
-
+RUN ln -s ${BLENDERPY} /usr/bin/python
 COPY . /bpycv/
 WORKDIR /bpycv
 RUN ${BLENDERPY} setup.py install
