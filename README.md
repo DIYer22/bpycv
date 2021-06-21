@@ -30,6 +30,8 @@ blender -b --python-expr "__import__('ensurepip')._bootstrap()"
 blender -b --python-expr "__import__('pip._internal')._internal.main(['install', '-U', 'pip', 'setuptools', 'wheel'])"
 # pip install bpycv
 blender -b --python-expr "__import__('pip._internal')._internal.main(['install', '-U', 'bpycv'])"
+# Check bpycv ready
+blender -b -E CYCLES --python-expr 'import bpycv,boxx;boxx.tree(bpycv.render_data())'
 ```
 
 ## ▮ Demo
