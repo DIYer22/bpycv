@@ -84,6 +84,10 @@ class HdriManager:
                 [],
             )
         )
+        assert self.downloading or len(self.all_paths)
+        if not len(self.all_paths):
+            self.hdr_paths = []
+            return
         if self.category == "all":
             self.hdr_paths = sorted(self.all_paths)
             return
@@ -102,13 +106,7 @@ class HdriManager:
                 )
             )
         self.df = boxx.pd.DataFrame(listt)
-        if self.category == "all":
-            hdr_paths = self.df.path
-        else:
-            hdr_paths = self.df[
-                self.df.cats.apply(lambda cats: self.category in cats)
-            ].path
-
+        hdr_paths = self.df[self.df.cats.apply(lambda cats: self.category in cats)].path
         self.hdr_paths = sorted(hdr_paths)
 
     def __len__(self):
@@ -147,43 +145,52 @@ class HdriManager:
 
         #  'https://hdrihaven.com/files/hdris/tv_studio_4k.hdr'
         def download(name):
-            try:
-                if self.debug:
-                    print(name)
-                prefix = f"{name}_{resolution}"
-                paths = boxx.glob(os.path.join(hdri_dir, prefix + "*"))
-                if len(paths):
-                    return paths[0]
-                url = f"https://hdrihaven.com/hdri/?h={name}"
-                html = BeautifulSoup(
-                    rq.get(url, timeout=5).text, features="html.parser",
-                )
-                href = [
-                    a["href"]
-                    for a in html.find_all("a")
-                    if f"_{resolution}." in a.get("href")
-                ][0]
-                cats = [
-                    a.text
-                    for a in html.find(text="Categories:").parent.parent.find_all("a")
-                ]
-                tags = [
-                    a.text for a in html.find(text="Tags:").parent.parent.find_all("a")
-                ]
-                name = f"{prefix}.{'='.join(cats)}.{'='.join(tags)}.{href[-3:]}"
+            t = 60
+            while 1:
+                try:
+                    if self.debug:
+                        print(name)
+                    prefix = f"{name}_{resolution}"
+                    paths = boxx.glob(os.path.join(hdri_dir, prefix + "*"))
+                    if len(paths):
+                        return paths[0]
+                    url = f"https://hdrihaven.com/hdri/?h={name}"
+                    html = BeautifulSoup(
+                        rq.get(url, timeout=5).text, features="html.parser",
+                    )
+                    href = [
+                        a["href"]
+                        for a in html.find_all("a")
+                        if f"_{resolution}." in a.get("href")
+                    ][0]
+                    cats = [
+                        a.text
+                        for a in html.find(text="Categories:").parent.parent.find_all(
+                            "a"
+                        )
+                    ]
+                    tags = [
+                        a.text
+                        for a in html.find(text="Tags:").parent.parent.find_all("a")
+                    ]
+                    name = f"{prefix}.{'='.join(cats)}.{'='.join(tags)}.{href[-3:]}"
 
-                path = pathjoin(hdri_dir, name)
-                r = rq.get(href, timeout=5)
-                assert r.status_code == 200
-                os.makedirs(hdri_dir, exist_ok=True)
-                with open(path, "wb") as f:
-                    f.write(r.content)
-                return path
-            except Exception as e:
-                if self.debug:
-                    boxx.pred - name
-                    boxx.g()
-                raise e
+                    path = pathjoin(hdri_dir, name)
+                    r = rq.get(href, timeout=5)
+                    assert r.status_code == 200
+                    os.makedirs(hdri_dir, exist_ok=True)
+                    with open(path, "wb") as f:
+                        f.write(r.content)
+                    return path
+                except AssertionError:
+                    print(f"r.status_code = {r.status_code}, sleep({t})")
+                    sleep(t)
+                    t *= 2
+                except Exception as e:
+                    if self.debug:
+                        boxx.pred - name
+                        boxx.g()
+                    raise e
 
         _names = names[:]
         random.shuffle(_names)
