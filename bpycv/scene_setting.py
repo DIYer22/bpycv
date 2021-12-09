@@ -5,9 +5,9 @@
 @mail: ylxx@live.com
 Created on Thu Jan 16 18:17:20 2020
 """
-import boxx
-
 import bpy
+import boxx
+import random
 
 
 def remove_useless_data():
@@ -55,6 +55,45 @@ def set_shading_mode(mode="SOLID", screens=[]):
             if spc.type == "VIEW_3D":
                 spc.spaces[0].shading.type = mode
                 break  # we expect at most 1 VIEW_3D space
+
+
+def add_img_background(img_path, size=0.8, domain_random=True):
+    """
+    Add img as background for domain randomzation, return a PASSIVE rigidbody Plane
+    TODO: keep aspect ratio 
+    """
+    import bpycv
+
+    bpy.ops.mesh.primitive_plane_add(size=size)
+    plane = bpy.context.active_object
+
+    with bpycv.activate_obj(plane):
+        bpy.ops.rigidbody.object_add()
+        plane.rigid_body.type = "PASSIVE"
+        bpycv.subdivide(plane, 2048)
+
+        material = bpy.data.materials.new("auto.background.DR")
+        material["is_auto"] = True
+        material.use_nodes = True
+        material.node_tree.nodes.clear()
+
+        with bpycv.activate_node_tree(material.node_tree):
+            image_node = bpycv.Node(
+                "ShaderNodeTexImage", image=bpy.data.images.load(img_path)
+            )
+            bsdf_node = bpycv.Node("ShaderNodeBsdfDiffuse")
+            bsdf_node.Color = image_node.Color
+            bpycv.Node("ShaderNodeOutputMaterial").Surface = bsdf_node.BSDF
+            if domain_random:
+                image_node.interpolation = random.choice(
+                    ["Closest", "Linear", "Cubic", "Smart"]
+                )
+                bsdf_node.Roughness = random.random()
+            else:
+                image_node.interpolation = "Linear"
+                bsdf_node.Roughness = 1.0
+            plane.data.materials.append(material)
+    return plane
 
 
 def add_stage(size=2, transparency=False):

@@ -33,6 +33,7 @@ from .scene_setting import (
     remove_useless_data,
     clear_all,
     set_shading_mode,
+    add_img_background,
     add_stage,
     add_environment_box,
 )

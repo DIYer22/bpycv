@@ -14,6 +14,7 @@
    - https://github.com/cheind/pytorch-blender
    - https://github.com/kopernikusai/shapes3d
    - https://github.com/ZumoLabs/zpy
+   - https://developer.nvidia.com/isaac-sim
 
 ## Done
  - [x] document and tutorial
