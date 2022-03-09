@@ -1,3 +1,7 @@
+## Star History
+
+![Star History Chart](https://api.star-history.com/svg?repos=diyer22/bpycv,DLR-RM/BlenderProc,ZumoLabs/zpy,google-research/kubric&type=Date)
+
 ## TODO
  - [ ] texturehaven's version of HdriManager
  - [ ] demo for build_tex and hdri
@@ -15,6 +19,7 @@
    - https://github.com/kopernikusai/shapes3d
    - https://github.com/ZumoLabs/zpy
    - https://developer.nvidia.com/isaac-sim
+   - https://github.com/google-research/kubric
 
 ## Done
  - [x] document and tutorial
