@@ -61,8 +61,8 @@ for index in range(1, 20):
     obj["inst_id"] = categories_id * 1000 + index
 
 # render image, instance annoatation and depth in one line code
-# result["ycb_meta"] is 6d pose GT
 result = bpycv.render_data()
+# result["ycb_meta"] is 6d pose GT
 
 # save result
 cv2.imwrite(
@@ -70,14 +70,14 @@ cv2.imwrite(
 )  # transfer RGB image to opencv's BGR
 
 # save instance map as 16 bit png
-# the value of each pixel represents the inst_id of the object to which the pixel belongs
 cv2.imwrite("demo-inst.png", np.uint16(result["inst"]))
+# the value of each pixel represents the inst_id of the object
 
 # convert depth units from meters to millimeters
 depth_in_mm = result["depth"] * 1000
 cv2.imwrite("demo-depth.png", np.uint16(depth_in_mm))  # save as 16bit png
 
-# visualization inst_rgb_depth for human
+# visualization instance mask, RGB, depth for human
 cv2.imwrite("demo-vis(inst_rgb_depth).jpg", result.vis()[..., ::-1])
 ```
 Open `./demo-vis(inst_rgb_depth).jpg`:   

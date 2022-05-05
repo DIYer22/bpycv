@@ -1,0 +1,15 @@
+
+tmp_*
+example/tmp_*
+*.exr
+*.blend
+*.blend1
+example/dataset
+
+.git
+.vscode
+*.pyc
+__pycache__
+
+# vim swap file
+*.swp
