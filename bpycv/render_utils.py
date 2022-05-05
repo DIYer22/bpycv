@@ -40,7 +40,7 @@ class set_annotation_render(StatuRecover):
         # TODO detect whether in ssh X11 forward
         # if sysi.gui:  # mean "does the enviroment support GUI".
         # self.set_attr(render, "engine", "BLENDER_EEVEE")
-        scene = bpy.data.scenes[0]
+        scene = bpy.context.scene
         render = scene.render
         if render.engine == "BLENDER_WORKBENCH":
             self.set_attr(render, "engine", "CYCLES")
@@ -52,13 +52,13 @@ class set_annotation_render(StatuRecover):
         elif render.engine == "CYCLES":
             self.set_attr(render, "engine", "CYCLES")
             self.set_attr(scene.cycles, "samples", 1)
-            self.set_attr(
-                bpy.context.view_layer.cycles, "use_denoising", False
-            )
+            self.set_attr(bpy.context.view_layer.cycles, "use_denoising", False)
         self.set_attr(render, "film_transparent", True)
         self.set_attr(scene.render, "use_motion_blur", False)
-        self.set_attr(scene.render, "tile_x", 256)
-        self.set_attr(scene.render, "tile_y", 256)
+
+        # not support for blender3, TODO del
+        # self.set_attr(scene.render, "tile_x", 256)
+        # self.set_attr(scene.render, "tile_y", 256)
 
         attrs = dict(
             file_format="OPEN_EXR",
@@ -69,6 +69,7 @@ class set_annotation_render(StatuRecover):
             use_zbuffer=True,
         )
         self.set_attrs(render.image_settings, attrs)
+        self.set_attrs(bpy.context.view_layer, dict(use_pass_z=True))
 
 
 class set_image_render(StatuRecover):

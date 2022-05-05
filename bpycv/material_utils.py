@@ -23,7 +23,11 @@ class set_inst_material(StatuRecover):
         StatuRecover.__init__(self)
 
         self.set_attr(bpy.data.worlds[0], "use_nodes", False)
-        objs = {obj.data.id_data: obj for obj in bpy.data.objects if obj.type in ("MESH", "CURVE")}
+        objs = {
+            obj.data.id_data: obj
+            for obj in bpy.data.objects
+            if obj.type in ("MESH", "CURVE")
+        }
         for obj_idx, obj in enumerate(objs.values()):
             inst_id = obj.get("inst_id", 0)  # default inst_id is 0
             color = tuple(encode_inst_id.id_to_rgb(inst_id)) + (1,)

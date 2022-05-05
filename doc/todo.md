@@ -11,6 +11,8 @@
  - [ ] visualize 3d bounding box of 6DoF GT(How to set xyzs)
  - [ ] answer first result of google: "blender depth python"
  - [ ] to COCO format
+ - [ ] support blender's Stereoscopy
+   - https://docs.blender.org/manual/en/latest/render/output/properties/stereoscopy/index.html
  - [ ] make better demo images by `img_switch_special_effect.js`
  - [ ] difference with:
    - https://github.com/DLR-RM/BlenderProc
@@ -22,6 +24,7 @@
    - https://github.com/google-research/kubric
 
 ## Done
+ - [x] support blender 3.0+
  - [x] document and tutorial
  - [x] support docker
  - [x] add `camera_utils.py` with `set/get_cam_intrinsic`
