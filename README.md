@@ -24,12 +24,12 @@
 `bpycv` support Blender 2.8+, 2.9+
 
 ```bash
-# Get pip: equl to /blender-path/2.xx/python/bin/python3.7m -m ensurepip
-blender -b --python-expr "__import__('ensurepip')._bootstrap()" 
+# Get pip: equl to /blender-path/3.xx/python/bin/python3.10 -m ensurepip
+blender -b --python-expr "import os,sys;os.system(f\"'{sys.executable}' -m ensurepip \")" 
 # Update pip toolchain
-blender -b --python-expr "__import__('pip._internal')._internal.main(['install', '-U', 'pip', 'setuptools', 'wheel'])"
+blender -b --python-expr "import os,sys;os.system(f\"'{sys.executable}' -m pip install -U pip setuptools wheel \")" 
 # pip install bpycv
-blender -b --python-expr "__import__('pip._internal')._internal.main(['install', '-U', 'bpycv'])"
+blender -b --python-expr "import os,sys;os.system(f\"'{sys.executable}' -m pip install -U bpycv \")" 
 # Check bpycv ready
 blender -b -E CYCLES --python-expr 'import bpycv,boxx;boxx.tree(bpycv.render_data())'
 ```
