@@ -45,6 +45,18 @@ class set_inst_material(StatuRecover):
             self.replace_collection(obj.data.materials, [material])
 
 
+def set_vertex_color_material(obj):
+    material = bpy.data.materials.new(obj.name + "_VertexColor_bpycv")
+    material.use_nodes = True
+    material.node_tree.nodes.clear()
+    with activate_node_tree(material.node_tree):
+        bsdf = Node("ShaderNodeBsdfPrincipled", Roughness=1, Specular=0)
+        bsdf["Base Color"] = Node("ShaderNodeVertexColor").Color
+        Node("ShaderNodeOutputMaterial").Surface = bsdf.BSDF
+    obj.data.materials.append(material)
+    return obj
+
+
 def remove_mat(mat_or_str):
     if isinstance(mat_or_str, str):
         mat = bpy.data.objects[mat_or_str]

@@ -10,6 +10,8 @@ from boxx import *
 
 import bpy
 
+from .material_utils import set_vertex_color_material
+
 
 def load_obj(filepath):
     """
@@ -34,8 +36,14 @@ def load_obj(filepath):
     }
     import_func = ext_to_import_func[ext]
     import_func(filepath=filepath)
-    assert len(bpy.context.selected_objects) == 1, f'load "{filepath}" failed!'
-    return bpy.context.selected_objects[-1]
+    assert len(bpy.context.selected_objects) >= 1, f'load "{filepath}" failed!'
+    obj = bpy.context.selected_objects[-1]
+
+    if not len(obj.data.materials) and ext == "ply":
+        # Guess the model is Vertex Shader
+        # And load Vertex Shader manual
+        set_vertex_color_material(obj)
+    return obj
 
 
 def is_obj_valid(obj):
