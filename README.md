@@ -21,17 +21,23 @@
 **News:** [We win 🥈2nd place in IROS 2020 Open Cloud Robot Table Organization Challenge (OCRTOC)](https://github.com/DIYer22/bpycv/issues/15)
 
 ## ▮ Install
-`bpycv` support Blender 2.8, 2.9, 3.0, 3.1+
+`bpycv` support Blender 2.9, 3.0, 3.1+
+
+1. Download and install Blender [here](https://www.blender.org/download/).
+
+2. Open Blender dir in terminal and run install script:
 
 ```bash
-# Get pip: equl to /blender-path/3.xx/python/bin/python3.10 -m ensurepip
-blender -b --python-expr "import os,sys;os.system(f\"'{sys.executable}' -m ensurepip \")" 
+# For Windows user: ensure powershell has administrator permission
+
+# Ensure pip: equl to /blender-path/3.xx/python/bin/python3.10 -m ensurepip
+./blender -b --python-expr "from subprocess import sys,call;call([sys.executable,'-m','ensurepip'])"
 # Update pip toolchain
-blender -b --python-expr "import os,sys;os.system(f\"'{sys.executable}' -m pip install -U pip setuptools wheel \")" 
+./blender -b --python-expr "from subprocess import sys,call;call([sys.executable]+'-m pip install -U pip setuptools wheel'.split())"
 # pip install bpycv
-blender -b --python-expr "import os,sys;os.system(f\"'{sys.executable}' -m pip install -U bpycv \")" 
+./blender -b --python-expr "from subprocess import sys,call;call([sys.executable]+'-m pip install -U bpycv'.split())"
 # Check bpycv ready
-blender -b -E CYCLES --python-expr 'import bpycv,boxx;boxx.tree(bpycv.render_data())'
+./blender -b -E CYCLES --python-expr "import bpycv,cv2;d=bpycv.render_data();bpycv.tree(d);cv2.imwrite('/tmp/try_bpycv_vis(inst-rgb-depth).jpg', d.vis()[...,::-1])"
 ```
 
 ## ▮ Demo
