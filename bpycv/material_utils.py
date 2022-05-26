@@ -32,16 +32,18 @@ class set_inst_material(StatuRecover):
             inst_id = obj.get("inst_id", 0)  # default inst_id is 0
             color = tuple(encode_inst_id.id_to_rgb(inst_id)) + (1,)
 
-            material_name = "auto.inst_material." + obj.name
-            material = bpy.data.materials.new(material_name)
-            material["is_auto"] = True
-            material.use_nodes = True
-            material.node_tree.nodes.clear()
-            with activate_node_tree(material.node_tree):
-                Node("ShaderNodeOutputMaterial").Surface = Node(
-                    "ShaderNodeEmission", Color=color
-                ).Emission
-
+            material_name = f"auto.inst_material.{inst_id}"
+            if bpy.data.materials.get(material_name) is None:
+                material = bpy.data.materials.new(material_name)
+                material["is_auto"] = True
+                material.use_nodes = True
+                material.node_tree.nodes.clear()
+                material.name = material_name
+                with activate_node_tree(material.node_tree):
+                    Node("ShaderNodeOutputMaterial").Surface = Node(
+                        "ShaderNodeEmission", Color=color
+                    ).Emission
+            material = bpy.data.materials[material_name]
             self.replace_collection(obj.data.materials, [material])
 
 
