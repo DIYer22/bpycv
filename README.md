@@ -17,7 +17,9 @@
  - [x] Support docker: `docker run -v /tmp:/tmp diyer22/bpycv` (see [Dockerfile](Dockerfile))
  - [x] A [Python Codebase](example/ycb_demo.py) for building synthetic datasets
  - [x] To [Cityscapes annotation format](https://github.com/DIYer22/bpycv/issues/38)
-
+ - [x] Easy to develop and debug because:
+    - No complicated packaging
+    - Work with Blender's native API and calling method
 **News:** [We win 🥈2nd place in IROS 2020 Open Cloud Robot Table Organization Challenge (OCRTOC)](https://github.com/DIYer22/bpycv/issues/15)
 
 ## ▮ Install
