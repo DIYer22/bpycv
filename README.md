@@ -20,6 +20,7 @@
  - [x] Easy to develop and debug because:
     - No complicated packaging
     - Work with Blender's native API and calling method
+
 **News:** [We win 🥈2nd place in IROS 2020 Open Cloud Robot Table Organization Challenge (OCRTOC)](https://github.com/DIYer22/bpycv/issues/15)
 
 ## ▮ Install
