@@ -57,13 +57,13 @@ for inst_id in range(1, 3):
 result = bpycv.render_data()
 
 # result["ycb_6d_pose"] is 6d pose GT
-meta = result["ycb_6d_pose"]
+ycb_6d_pose = result["ycb_6d_pose"]
 img = result["image"]
 
 # all vertices in cube
 cube_xyz = [list(v.co) for v in cube.data.vertices]
 
-vis = vis_ycb_6d_poses(img, meta, cube_xyz)
+vis = vis_ycb_6d_poses(img, ycb_6d_pose, cube_xyz)
 
 cv2.imwrite(
     "demo-vis_6d_pose.jpg", cv2.cvtColor(vis, cv2.COLOR_RGB2BGR)
