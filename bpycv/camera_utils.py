@@ -41,8 +41,8 @@ def set_cam_pose(cam_radius=1, cam_deg=45, cam_x_deg=None, cam=None):
     y = xy * np.sin(cam_x_rad)
     cam = cam or get_cams()[0]
     cam.location = x, y, z
-    cam.rotation_euler = pi / 2 - cam_rad, 0.1, pi / 2 + cam_x_rad
-    cam.scale = (0.1,) * 3
+    cam.rotation_euler = pi / 2 - cam_rad, 0.0, pi / 2 + cam_x_rad
+    # cam.scale = (cam_radius * 0.1,) * 3
     return cam
 
 
@@ -103,6 +103,7 @@ def get_cam_intrinsic(cam=None):
 
 def set_cam_intrinsic(cam, K, hw=None):
     """
+    change cam and K
     Invert the function get_cam_intrinsic
     
     K =[[s_u, 0, u_0],
