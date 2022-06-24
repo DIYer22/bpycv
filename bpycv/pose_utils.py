@@ -144,7 +144,6 @@ def get_6d_pose(objs, inst=None, camera=None):
         meta[key] = []
     for obj in objs:
         inst_id = obj.get("inst_id", -1)
-        assert inst_id <= 100e4, f"inst_id '{inst_id}' should <= 100e4"
         area = inst_id_to_area(inst_id)
         if area != 0:
             meta["inst_ids"].append(inst_id)

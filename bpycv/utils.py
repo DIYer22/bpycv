@@ -34,6 +34,10 @@ class encode_inst_id:
             RGB for Blender.
 
         """
+
+        assert (
+            id <= 100e4
+        ), f"inst_id '{id}' should <= 100e4, see: https://github.com/DIYer22/bpycv/issues/41"
         if isinstance(id, (float, int)):
             id = np.array(id)
         rgb = np.zeros(id.shape + (3,), dtype=np.float64)
