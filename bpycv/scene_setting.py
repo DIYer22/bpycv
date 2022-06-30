@@ -66,7 +66,7 @@ def add_img_background(img_path, size=0.8, domain_random=True):
 
     bpy.ops.mesh.primitive_plane_add(size=size)
     plane = bpy.context.active_object
-
+    plane["environment_bpycv"] = True
     with bpycv.activate_obj(plane):
         bpy.ops.rigidbody.object_add()
         plane.rigid_body.type = "PASSIVE"
@@ -112,6 +112,7 @@ def add_stage(size=2, transparency=False):
     bpy.ops.mesh.primitive_cube_add(size=size, location=(0, 0, -size / 2))
     stage = bpy.context.active_object
     stage.name = "stage"
+    stage["environment_bpycv"] = True
     with bpycv.activate_obj(stage):
         bpy.ops.rigidbody.object_add()
         stage.rigid_body.type = "PASSIVE"
@@ -153,6 +154,7 @@ def add_environment_box(xyz=(2, 2, 2), thickness=0.2, transparency=False):
         else:
             bpy.ops.object.modifier_apply(apply_as="DATA", modifier=modifier.name)
     bpycv.remove_obj(cube)
+    box["environment_bpycv"] = True
     return box
 
 
