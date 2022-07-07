@@ -20,6 +20,7 @@ from .object_utils import (
     subdivide,
     duplicate,
     load_obj,
+    get_obj_size_info,
 )
 from .material_utils import (
     set_inst_material,

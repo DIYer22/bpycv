@@ -9,7 +9,7 @@ Created on Sat Dec 28 20:51:37 2019
 from boxx import *
 
 import bpy
-
+import numpy as np
 from .material_utils import set_vertex_color_material
 
 
@@ -106,6 +106,25 @@ def duplicate(obj, copy_data=False, collection=None):
         new_obj.data = obj.data.copy()
     collection.objects.link(new_obj)
     return new_obj
+
+
+def get_obj_size_info(obj):
+    """
+    In [0]: tree-size_info                                                         
+    └── /: dict  4
+        ├── box: (8, 3)float64  # bound_box * scale
+        ├── size: (3,)float64   # xyz
+        ├── circumcircle: 0.866 # radius
+        └── scale: (3,)float64
+
+    return dict(box=box, size=size, circumcircle=circumcircle, scale=scale)
+    """
+    scale = np.array(obj.scale)
+    box = np.array([v[:] for v in obj.bound_box]) * scale[None]
+    size = box.max(0) - box.min(0)
+    circumcircle = np.linalg.norm(box, axis=1).max()
+    size_info = dict(box=box, size=size, circumcircle=circumcircle, scale=scale)
+    return size_info
 
 
 if __name__ == "__main__":

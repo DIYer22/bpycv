@@ -7,8 +7,6 @@ Created on Sun Jan  5 21:41:51 2020
 """
 
 from boxx import *
-from boxx import defaultdict
-
 
 import bpy
 import mathutils
@@ -16,6 +14,7 @@ import numpy as np
 
 from .physic_utils import OLD_V0_KEY
 from .camera_utils import get_cam_intrinsic
+from .object_utils import get_obj_size_info
 
 
 T_bcam2cv = np.array(((1, 0, 0, 0), (0, -1, 0, 0), (0, 0, -1, 0), (0, 0, 0, 1)))
@@ -139,8 +138,13 @@ def get_6d_pose(objs, inst=None, camera=None):
         "6ds",
         "bound_boxs",
         "mesh_names",
+        # from size_info
+        "size",
+        "circumcircle",
+        "box",
     ]:
-        # default is []
+        # If visibles is empty, default should set k, v as []
+        # The attributes of each instance should be aggregated by list for vectorized calculations
         meta[key] = []
     for obj in objs:
         inst_id = obj.get("inst_id", -1)
@@ -161,7 +165,12 @@ def get_6d_pose(objs, inst=None, camera=None):
             meta["bound_boxs"].append(bound_box)
             meta["mesh_names"].append(obj.name)
 
-    meta["poses"] = meta["poses"] and np.concatenate(meta["poses"], -1)
+            size_info = get_obj_size_info(obj)
+            for key in ["size", "circumcircle", "box"]:
+                meta[key].append(size_info[key])
+
+    if len(meta["poses"]):
+        meta["poses"] = np.concatenate(meta["poses"], -1)
     return dict(meta)
 
 
