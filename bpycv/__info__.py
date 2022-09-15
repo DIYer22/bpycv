@@ -1,4 +1,4 @@
-__version__ = "0.3.4"
+__version__ = "0.3.5"
 __description__ = "Computer vision utils for Blender."
 __license__ = "MIT"
 __author__ = "DIYer22"

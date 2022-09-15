@@ -24,12 +24,17 @@ class set_inst_material(StatuRecover):
 
         self.set_attr(bpy.data.worlds[0], "use_nodes", False)
         objs = {
-            obj.data.id_data: obj
-            for obj in bpy.data.objects
-            if obj.type in ("MESH", "CURVE")
+            obj.name: obj for obj in bpy.data.objects if obj.type in ("MESH", "CURVE")
         }
+        id_data_to_inst_id = {}
         for obj_idx, obj in enumerate(objs.values()):
             inst_id = obj.get("inst_id", 0)  # default inst_id is 0
+            if obj.data.id_data in id_data_to_inst_id:
+                v = id_data_to_inst_id[obj.data.id_data]
+                assert (
+                    v[1] == inst_id
+                ), f'objects["{v[0]}"] and objects["{obj.name}"] have same obj.data, but different inst_id number {(v[1], inst_id)}. May fix by obj2.data=obj1.data.copy()'
+            id_data_to_inst_id[obj.data.id_data] = obj.name, inst_id
             color = tuple(encode_inst_id.id_to_rgb(inst_id)) + (1,)
 
             material_name = f"auto.inst_material.{inst_id}"

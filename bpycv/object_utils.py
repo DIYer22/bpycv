@@ -33,6 +33,7 @@ def load_obj(filepath):
         "obj": bpy.ops.import_scene.obj,
         "dae": bpy.ops.wm.collada_import,
         "ply": bpy.ops.import_mesh.ply,
+        "fbx": bpy.ops.import_scene.fbx,
     }
     import_func = ext_to_import_func[ext]
     import_func(filepath=filepath)
