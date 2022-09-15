@@ -1,6 +1,6 @@
 # git clone https://github.com/DIYer22/bpycv && cd bpycv && docker build --network=host -t diyer22/bpycv ./ && docker run -v /tmp:/tmp -it diyer22/bpycv
 
-FROM nytimes/blender:3.1-gpu-ubuntu18.04
+FROM nytimes/blender:3.2-gpu-ubuntu18.04
 
 LABEL Author="Lei Yang <DIYer22@GitHub>"
 LABEL Title="bpycv in Docker"
@@ -17,4 +17,6 @@ WORKDIR /bpycv
 RUN ${BLENDERPY} -m pip install --no-cache-dir -r requirements.txt
 RUN ${BLENDERPY} setup.py install
 WORKDIR /tmp
+
+# run demo
 CMD blender -b -E CYCLES -P /bpycv/example/6d_pose_demo.py && sh /bpycv/example/run_ycb_demo.sh
