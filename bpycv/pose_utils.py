@@ -93,7 +93,7 @@ def homo_coord(points_or_Rt):
 
 def set_matrix_world(obj, matrix_world):
     """
-    Seems only set pose by obj.location and obj.rotation_euler 
+    Seems only set pose by obj.location and obj.rotation_euler
     """
     if len(matrix_world) == 3:
         matrix_world = homo_coord(matrix_world)

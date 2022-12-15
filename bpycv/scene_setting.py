@@ -60,7 +60,7 @@ def set_shading_mode(mode="SOLID", screens=[]):
 def add_img_background(img_path, size=0.8, domain_random=True):
     """
     Add img as background for domain randomzation, return a PASSIVE rigidbody Plane
-    TODO: keep aspect ratio 
+    TODO: keep aspect ratio
     """
     import bpycv
 
@@ -98,7 +98,7 @@ def add_img_background(img_path, size=0.8, domain_random=True):
 
 def add_stage(size=2, transparency=False):
     """
-    add PASSIVE rigidbody cube for physic stage or depth background 
+    add PASSIVE rigidbody cube for physic stage or depth background
 
     Parameters
     ----------

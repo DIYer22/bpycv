@@ -49,7 +49,7 @@ def texture_bsdf_dr(obj, shade_smooth_rate=0.9):
 def load_distractor(distractor_path, target_size="fit_to_YCB"):
     """
     load_distractor, usually using shape net
-    
+
     Notice: shape net's distractor should format by meshlabserver, than import to Blender
 
     Parameters

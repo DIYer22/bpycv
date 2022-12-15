@@ -111,7 +111,7 @@ def duplicate(obj, copy_data=False, collection=None):
 
 def get_obj_size_info(obj):
     """
-    In [0]: tree-size_info                                                         
+    In [0]: tree-size_info
     └── /: dict  4
         ├── box: (8, 3)float64  # bound_box * scale
         ├── size: (3,)float64   # xyz

@@ -36,7 +36,7 @@ def set_cam_pose(cam_radius=1, cam_deg=45, cam_x_deg=None, cam=None):
         cam_x_deg = random.uniform(0, 360)
     cam_x_rad = deg2rad(cam_x_deg)
     z = cam_radius * np.sin(cam_rad)
-    xy = (cam_radius ** 2 - z ** 2) ** 0.5
+    xy = (cam_radius**2 - z**2) ** 0.5
     x = xy * np.cos(cam_x_rad)
     y = xy * np.sin(cam_x_rad)
     cam = cam or get_cams()[0]
@@ -105,7 +105,7 @@ def set_cam_intrinsic(cam, K, hw=None):
     """
     change cam and K
     Invert the function get_cam_intrinsic
-    
+
     K =[[s_u, 0, u_0],
         [0, s_v, v_0],
         [0,   0,   1]]

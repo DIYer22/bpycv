@@ -57,7 +57,7 @@ class MetaDatasetGenerator:
 
         if self.cfg.DEBUG:
             self.generate_one(abs_dir, str(int(time.time())))
-            boxx.pred(abs_dir)
+            # boxx.pred(abs_dir)
             return
         keys = self.resample_keys(keys)
         for index in keys:

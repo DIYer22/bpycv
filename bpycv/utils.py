@@ -16,7 +16,7 @@ class encode_inst_id:
     """
 
     max_depth = 20
-    max_denominator = 2 ** max_depth
+    max_denominator = 2**max_depth
 
     @classmethod
     def id_to_rgb(cls, id):
@@ -47,7 +47,7 @@ class encode_inst_id:
         int_part = absf // 1
         # rgb[..., 1] = 1 - 1 / (int_part + 1)
         poww = np.int32(np.log2(int_part + 1, dtype=np.float32)) + 1
-        denominator = (2 ** poww).round()
+        denominator = (2**poww).round()
         rgb[..., 1] = ((int_part - denominator // 2 + 1) * 2 + 1) / denominator
 
         rgb[..., 2] = absf % 1

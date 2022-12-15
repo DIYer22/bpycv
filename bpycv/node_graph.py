@@ -30,10 +30,10 @@ def is_node_socket(obj):
 class Node(object):
     """
     Usage:
-        
+
     >>> with activate_node_tree(material.node_tree):
             Node("ShaderNodeOutputMaterial").Surface = Node("ShaderNodeEmission", Color=color).Emission
-    
+
     >>> with activate_node_tree(material.node_tree):
             Node(
                 "ShaderNodeOutputMaterial",

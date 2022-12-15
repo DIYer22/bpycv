@@ -47,16 +47,16 @@ class HdriManager:
             choice [1k, 2k, 4k, 8k, 16k, 19k]. The default is "4k".
         category : str, optional
             refer to https://hdrihaven.com/hdris/ side bar
-            choice one [All, Outdoor, Architecture, Building, Europe, 
-                        Field, Forest, Grass, Hill, Park, Path, River, 
-                        Road, Rock, Sun1, Tree, View, Skies, Indoor, 
-                        Studio, Nature, Urban, Night, Sunrise/Sunset, 
-                        Morning/Afternoon, Midday, Clear, Partly Cloudy, 
-                        Overcast, High Contrast, Medium Contrast, 
-                        Low Contrast, Natural Light, Artificial Light]. 
+            choice one [All, Outdoor, Architecture, Building, Europe,
+                        Field, Forest, Grass, Hill, Park, Path, River,
+                        Road, Rock, Sun1, Tree, View, Skies, Indoor,
+                        Studio, Nature, Urban, Night, Sunrise/Sunset,
+                        Morning/Afternoon, Midday, Clear, Partly Cloudy,
+                        Overcast, High Contrast, Medium Contrast,
+                        Low Contrast, Natural Light, Artificial Light].
             The default is "all".
         download : bool, optional
-            If True, auto download from https://hdrihaven.com/hdris/ 
+            If True, auto download from https://hdrihaven.com/hdris/
             by another threading using requesets.
             The default is False.
         """
@@ -132,7 +132,9 @@ class HdriManager:
             sleep(0.1)
         return random.choice(self.hdr_paths)
 
-    def prepare(self,):
+    def prepare(
+        self,
+    ):
         resolution = self.resolution
         category = self.category
         hdri_dir = self.hdri_dir
@@ -156,7 +158,8 @@ class HdriManager:
                         return paths[0]
                     url = f"https://hdrihaven.com/hdri/?h={name}"
                     html = BeautifulSoup(
-                        rq.get(url, timeout=5).text, features="html.parser",
+                        rq.get(url, timeout=5).text,
+                        features="html.parser",
                     )
                     href = [
                         a["href"]
@@ -195,7 +198,12 @@ class HdriManager:
         _names = names[:]
         random.shuffle(_names)
         if self.debug:
-            list(map(download, _names,))
+            list(
+                map(
+                    download,
+                    _names,
+                )
+            )
         else:
             mapmt(download, _names, pool=1)
         self.set_hdr_paths()

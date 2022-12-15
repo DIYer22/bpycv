@@ -69,7 +69,7 @@ for index in range(6):
 for i in range(20):
     bpy.context.scene.frame_set(bpy.context.scene.frame_current + 1)
 
-# If the GPU is not in use, uncoment this line 
+# If the GPU is not in use, uncoment this line
 # bpycv.set_cycles_compute_device_type("CUDA")
 
 # render image, instance annoatation and depth in one line code

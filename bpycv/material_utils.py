@@ -74,7 +74,7 @@ def remove_mat(mat_or_str):
 
 def load_hdri_world(hdri_path, random_rotate_z=False):
     """
-    
+
 
     Parameters
     ----------
