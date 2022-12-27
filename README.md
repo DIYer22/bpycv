@@ -1,4 +1,4 @@
-# `bpycv`: computer vision and deep learning utils for Blender
+# `bpycv`: Computer Vision and Deep Learning Utils for Blender
 
 ### Contents: [Features](#-features) | [Install](#-install) | [Demo](#-demo) | [Tips](#-tips) 
 
@@ -13,13 +13,13 @@
     - [Light and background](https://github.com/DIYer22/bpycv_example_data/tree/main/background_and_light), automatic download from [HDRI Haven](https://hdrihaven.com/hdris/)
     - [Distractors](https://arxiv.org/pdf/1804.06516) from [ShapeNet](https://shapenet.org/) (e.g. vase, painting, pallet in Figure.1)
     - Textures from [Texture Haven](https://texturehaven.com/textures/)
- - [x] Very easy to install and run demo
- - [x] Support docker: `docker run -v /tmp:/tmp diyer22/bpycv` (see [Dockerfile](Dockerfile))
- - [x] A [Python Codebase](example/ycb_demo.py) for building synthetic datasets
- - [x] To [Cityscapes annotation format](https://github.com/DIYer22/bpycv/issues/38)
- - [x] Easy to develop and debug because:
+ - [x] Easy installation and demo running
+ - [x] Docker support: `docker run -v /tmp:/tmp diyer22/bpycv` (see [Dockerfile](Dockerfile))
+ - [x] A Python Codebase for building synthetic datasets (see [example/ycb_demo.py](example/ycb_demo.py))
+ - [x] Conversion to [Cityscapes annotation format](https://github.com/DIYer22/bpycv/issues/38)
+ - [x] Easy development and debugging due to:
     - No complicated packaging
-    - Work with Blender's native API and calling method
+    - Use of Blender's native API and calling methods
 
 **News:** [We win 🥈2nd place in IROS 2020 Open Cloud Robot Table Organization Challenge (OCRTOC)](https://github.com/DIYer22/bpycv/issues/15)
 
