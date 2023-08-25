@@ -110,7 +110,8 @@ class ExrImage:
 class ImageWithAnnotation(dict):
     def __init__(self, image=None, exr=None, **kv):
         super().__init__(**kv)
-        self["image"] = image
+        if image is not None:
+            self["image"] = image
         self["inst"] = exr.get_inst()
         self["depth"] = exr.get_depth()
         self["_raw_exr"] = exr
@@ -134,8 +135,8 @@ class ImageWithAnnotation(dict):
             inst_vis = vis_inst(self["inst"])
             vis_list.append(inst_vis)
 
-        if self.get("image") is not None:
-            image = self["image"]
+        image = self.get("image", self.get("image1"))
+        if image is not None:
             vis_list.append(image[..., :3] / 255.0)
 
         depth_vis = self["_raw_exr"].get_pseudo_color()
@@ -143,43 +144,59 @@ class ImageWithAnnotation(dict):
         vis = (np.concatenate(vis_list, 1) * 255).astype(np.uint8)
         return vis
 
-    def save(self, dataset_dir="dataset", fname="0", save_blend=False):
+    def save(
+        self, dataset_dir="dataset", fname="0", save_blend=False, no_sub_dir=False
+    ):
         fname = str(fname)
+        os.makedirs(dataset_dir, exist_ok=True)
+
+        def split_by_datatype_prefix(fname, type_name):
+            sub_dir = pathjoin(dataset_dir, type_name)
+            os.makedirs(sub_dir, exist_ok=True)
+            return sub_dir + "/" + fname
+
+        no_sub_dir_prefix = lambda fname, type_name: pathjoin(
+            dataset_dir, f"{fname}~{type_name}"
+        )
+        get_prefix = no_sub_dir_prefix if no_sub_dir else split_by_datatype_prefix
+
         if self.get("inst") is not None:
-            inst_dir = pathjoin(dataset_dir, "instance_map")
-            os.makedirs(inst_dir, exist_ok=True)
-            inst_path = pathjoin(inst_dir, fname + ".png")
+            inst_prefix = get_prefix(fname, "instance_map")
+            inst_path = inst_prefix + ".png"
             cv2.imwrite(inst_path, self["inst"].clip(0).astype(np.uint16))
         if self.get("depth") is not None:
-            depth_dir = pathjoin(dataset_dir, "depth")
-            os.makedirs(depth_dir, exist_ok=True)
-            depth_path = pathjoin(depth_dir, fname)
-            savenp(depth_path, self["depth"].astype(np.float16))
+            depth_prefix = get_prefix(fname, "depth")
+            depth_path = depth_prefix
+            if self["depth"].dtype == np.uint16:
+                cv2.imwrite(depth_path + ".png", self["depth"])
+            else:
+                savenp(depth_path, self["depth"].astype(np.float16))
         if (
-            self.get("image") is not None
+            self.get("image", self.get("image1")) is not None
             and self.get("inst") is not None
             and self.get("depth") is not None
         ):
-            vis_dir = pathjoin(dataset_dir, "vis")
-            os.makedirs(vis_dir, exist_ok=True)
-            vis_path = pathjoin(vis_dir, fname + ".jpg")
+            vis_prefix = get_prefix(fname, "vis")
+            vis_path = vis_prefix + ".jpg"
             cv2.imwrite(vis_path, self.vis()[..., ::-1])
         if self.get("ycb_6d_pose") is not None:
-            pose_dir = pathjoin(dataset_dir, "ycb_6d_pose")
-            os.makedirs(pose_dir, exist_ok=True)
-            pose_path = pathjoin(pose_dir, fname + ".mat")
+            pose_prefix = get_prefix(fname, "ycb_6d_pose")
+            pose_path = pose_prefix + ".mat"
             scipy.io.savemat(pose_path, self["ycb_6d_pose"])
         if save_blend:
-            blend_dir = pathjoin(dataset_dir, "blend")
-            os.makedirs(blend_dir, exist_ok=True)
-            blend_path = pathjoin(blend_dir, fname + ".blend")
+            blend_prefix = get_prefix(fname, "blend")
+            blend_path = blend_prefix + ".blend"
             bpy.ops.wm.save_mainfile(filepath=os.path.abspath(blend_path))
         # save image at last for unstable compute enviroment
-        if self.get("image") is not None:
-            image_dir = pathjoin(dataset_dir, "image")
-            os.makedirs(image_dir, exist_ok=True)
-            image_path = pathjoin(image_dir, fname + ".jpg")
-            cv2.imwrite(image_path, self["image"][..., ::-1])
+        def save_rgb_image(key):
+            if self.get(key) is not None:
+                image_prefix = get_prefix(fname, key)
+                image_path = image_prefix + ".jpg"
+                cv2.imwrite(image_path, self[key][..., ::-1])
+
+        save_rgb_image("image")
+        save_rgb_image("image1")
+        save_rgb_image("image2")
 
 
 def parser_exr(exr_path):
