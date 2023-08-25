@@ -12,6 +12,7 @@ from boxx import greyToRgb, histEqualize, inpkg, np, pathjoin, savenp
 with inpkg():
     from .pseudo_color import heatmap_to_pseudo_color
     from .utils import encode_inst_id
+    from .camera_utils import get_cam_intrinsic
 
 import os
 import struct
@@ -20,6 +21,28 @@ import bpy
 import cv2
 import minexr
 import scipy.io
+
+
+def depth_of_point_to_depth(depth_of_point, K):
+    """
+    # https://blender.stackexchange.com/questions/130970/cycles-generates-distorted-depth
+    CYCLES's depth is distance to camera original point
+    EEVEE's dpeth is XYZ's Z, same to opencv
+    """
+    h, w = depth_of_point.shape
+    xyzs_1m = (
+        np.pad(
+            np.mgrid[:h, :w][::-1].reshape(2, -1), ((0, 1), (0, 0)), constant_values=1
+        ).T
+        @ np.linalg.inv(K).T
+    )
+    xyzs = (
+        xyzs_1m
+        * depth_of_point.flatten()[:, None]
+        / np.linalg.norm(xyzs_1m, axis=1, keepdims=True)
+    )
+    depth = xyzs[:, 2].reshape(h, w)
+    return depth
 
 
 class ExrReader(minexr.reader.MinExrReader):
@@ -71,9 +94,15 @@ class ExrReader(minexr.reader.MinExrReader):
 class ExrImage:
     LIMIT_DEPTH = 6e4
 
-    def __init__(self, exr_path):
+    def __init__(self, exr_path, K=None):
         with open(exr_path, "rb") as fp:
             self.reader = ExrReader(fp)
+        self.by_cycles = any(
+            [key for key in self.reader.attrs if key.startswith("cycles.")]
+        )
+        if self.by_cycles and K is None:  # CYCLES has different depth
+            K = get_cam_intrinsic()
+        self.K = K
 
     def get_rgb(self):
         return self.reader.select(["R", "G", "B"]).copy()
@@ -81,8 +110,14 @@ class ExrImage:
     def get_rgba(self):
         return self.reader.select(["R", "G", "B", "A"]).copy()
 
+    def get_raw_depth(self):
+        raw_depth = self.reader.select(["Z"]).copy().squeeze()
+        if self.by_cycles:
+            raw_depth = depth_of_point_to_depth(raw_depth, self.K)
+        return raw_depth
+
     def get_pseudo_color(self):
-        depth = self.reader.select(["Z"]).copy().squeeze()
+        depth = self.get_raw_depth()
         limit_mask = depth < self.LIMIT_DEPTH
         depth = depth * limit_mask
         depth = depth / depth.max()
@@ -92,7 +127,7 @@ class ExrImage:
 
     def get_depth(self):
         # turn inf depth to 0
-        depth = self.reader.select(["Z"]).copy().squeeze()
+        depth = self.get_raw_depth()
         limit_mask = depth < self.LIMIT_DEPTH
         depth = depth * limit_mask
         return depth

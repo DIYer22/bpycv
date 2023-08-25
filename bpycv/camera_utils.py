@@ -17,7 +17,7 @@ def get_cam(cam=None):
     cam: Camera or str, if is str bpy.data.get(str, camera_add())
     """
     if cam is None:
-        cam = get_cams()[0]
+        cam = bpy.context.scene.camera
     if isinstance(cam, str):
         name = cam
         if name not in bpy.data.objects:

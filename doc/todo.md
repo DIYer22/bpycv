@@ -25,6 +25,7 @@
     - https://github.com/google-research/kubric
 
 ## Done
+- [x] fix wrong depth bug by CYCLES
 - [ ] ~~support blender's Stereoscopy~~(Stereo by `StereoCamera`)
     - https://docs.blender.org/manual/en/latest/render/output/properties/stereoscopy/index.html
 - [x] obj size info

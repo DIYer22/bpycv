@@ -120,8 +120,8 @@ def render_data(render_image=True, render_annotation=True):
         ):
             print("Render annotation using:", render.engine)
             bpy.ops.render.render(write_still=True)
-        render_result["exr"] = parser_exr(exr_path)
-        os.remove(exr_path)
+            render_result["exr"] = parser_exr(exr_path)
+            os.remove(exr_path)
     result = ImageWithAnnotation(**render_result)
     if "render_6d_pose" and render_annotation:
         objs = [obj for obj in bpy.data.objects if "inst_id" in obj]
