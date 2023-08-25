@@ -13,8 +13,6 @@
 - [ ] sample obj/camera location according to size info
 - [ ] to COCO format
     - by cv_data
-- [ ] support blender's Stereoscopy
-    - https://docs.blender.org/manual/en/latest/render/output/properties/stereoscopy/index.html
 - [ ] make better demo images by `img_switch_special_effect.js`
 - [ ] difference with:
     - https://github.com/DLR-RM/BlenderProc
@@ -26,6 +24,8 @@
     - https://github.com/google-research/kubric
 
 ## Done
+- [ ] ~~support blender's Stereoscopy~~(Stereo by `StereoCamera`)
+    - https://docs.blender.org/manual/en/latest/render/output/properties/stereoscopy/index.html
 - [x] obj size info
 - [x] support blender 3.0+
 - [x] document and tutorial
