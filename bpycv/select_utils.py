@@ -12,7 +12,7 @@ from boxx import pd
 import bpy
 
 objs = bpy.data.objects
-scene = bpy.data.scenes[0]
+scene = bpy.context.scene
 render = scene.render
 cam = bpy.data.objects.get("Camera", None)
 world = bpy.data.worlds[0]

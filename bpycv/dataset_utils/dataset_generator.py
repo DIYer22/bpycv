@@ -24,7 +24,7 @@ class MetaDatasetGenerator:
         self._blender_setting()
 
     def _blender_setting(self):
-        render = bpy.data.scenes[0].render
+        render = bpy.context.scene.render
         render.engine = "CYCLES"
         render.resolution_x = self.cfg.RESOLUTION[1]
         render.resolution_y = self.cfg.RESOLUTION[0]
