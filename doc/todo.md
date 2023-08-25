@@ -3,6 +3,7 @@
 ![Star History Chart](https://api.star-history.com/svg?repos=diyer22/bpycv,DLR-RM/BlenderProc,ZumoLabs/zpy,google-research/kubric&type=Date)
 
 ## TODO
+- [ ] stereo.render_data() return Disparity, .etc
 - [ ] texturehaven's version of HdriManager
 - [ ] demo for build_tex and hdri
 - [ ] better instance map: which consider displacement
