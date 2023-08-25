@@ -12,6 +12,25 @@ def get_cams():
     return [obj for obj in bpy.data.objects if obj.type == "CAMERA"]
 
 
+def get_cam(cam=None):
+    """
+    cam: Camera or str, if is str bpy.data.get(str, camera_add())
+    """
+    if cam is None:
+        cam = get_cams()[0]
+    if isinstance(cam, str):
+        name = cam
+        if name not in bpy.data.objects:
+            current_obj = bpy.context.view_layer.objects.active
+            bpy.ops.object.camera_add()
+            assert len(bpy.context.selected_objects) >= 1, f"Camera_add() failed!"
+            cam = bpy.context.selected_objects[-1]
+            cam.name = name
+            bpy.context.view_layer.objects.active = current_obj
+        cam = bpy.data.objects[name]
+    return cam
+
+
 def set_cam_pose(cam_radius=1, cam_deg=45, cam_x_deg=None, cam=None):
     """
     Set the camera pose according to the shape of hemisphere.
@@ -39,11 +58,16 @@ def set_cam_pose(cam_radius=1, cam_deg=45, cam_x_deg=None, cam=None):
     xy = (cam_radius**2 - z**2) ** 0.5
     x = xy * np.cos(cam_x_rad)
     y = xy * np.sin(cam_x_rad)
-    cam = cam or get_cams()[0]
+    cam = get_cam(cam)
     cam.location = x, y, z
     cam.rotation_euler = pi / 2 - cam_rad, 0.0, pi / 2 + cam_x_rad
     # cam.scale = (cam_radius * 0.1,) * 3
     return cam
+
+
+def get_cam_hw(cam=None):
+    render = bpy.context.scene.render
+    return render.resolution_y, render.resolution_x
 
 
 def get_cam_intrinsic(cam=None):
@@ -66,7 +90,7 @@ def get_cam_intrinsic(cam=None):
                 return "VERTICAL"
         return sensor_fit
 
-    cam = cam or get_cams()[0]
+    cam = get_cam(cam)
     camd = cam.data
     if camd.type != "PERSP":
         raise ValueError("Non-perspective cameras not supported")
@@ -139,6 +163,29 @@ def set_cam_intrinsic(cam, K, hw=None):
     camd.lens = s_u * camd.sensor_width / w
     camd.shift_x = (w / 2 - u_0) / w
     camd.shift_y = (v_0 - h / 2) / w * pixel_aspect_ratio
+
+
+def set_cam(cam=None, matrix_world=None, K=None, hw=None):
+    """
+    cam: Camera or str, will get_cam(cam)
+    matrix_world: 4x4 matrix world
+    K: 3x3 intrinsic
+    hw: tuple
+    """
+    from .pose_utils import set_matrix_world
+
+    cam = get_cam(cam)
+    if matrix_world is not None:
+        set_matrix_world(
+            cam,
+            matrix_world
+            @ mathutils.Matrix(
+                ((1, 0, 0, 0), (0, -1, 0, 0), (0, 0, -1, 0), (0, 0, 0, 1))
+            ),
+        )
+    if K is not None:
+        set_cam_intrinsic(cam, K, hw)
+    return cam
 
 
 if __name__ == "__main__":

@@ -43,7 +43,15 @@ from .scene_setting import (
     add_stage,
     add_environment_box,
 )
-from .camera_utils import get_cams, set_cam_pose, set_cam_intrinsic, get_cam_intrinsic
+from .camera_utils import (
+    get_cam,
+    get_cams,
+    set_cam,
+    set_cam_pose,
+    get_cam_intrinsic,
+    get_cam_hw,
+    set_cam_intrinsic,
+)
 from .pose_utils import (
     T_bcam2cv,
     homo_coord,

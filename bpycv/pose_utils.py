@@ -13,7 +13,6 @@ import mathutils
 import numpy as np
 
 from .physic_utils import OLD_V0_KEY
-from .camera_utils import get_cam_intrinsic
 from .object_utils import get_obj_size_info
 
 
@@ -62,6 +61,8 @@ def get_4x4_world_to_cam_from_blender(camera):
 
 
 def get_K_world_to_cam(camera):
+    from .camera_utils import get_cam_intrinsic
+
     K = get_cam_intrinsic(camera)
     world_to_cam = get_4x4_world_to_cam_from_blender(camera)
     return {

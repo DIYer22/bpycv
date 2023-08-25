@@ -17,6 +17,7 @@ from .exr_image_parser import ImageWithAnnotation, parser_exr
 from .material_utils import set_inst_material
 from .pose_utils import get_6d_pose
 from .statu_recover import StatuRecover, undo
+from .camera_utils import get_cam
 
 
 def set_cycles_compute_device_type(compute_device_type="CUDA"):
@@ -75,16 +76,20 @@ class set_annotation_render(StatuRecover):
 class set_image_render(StatuRecover):
     def __init__(self):
         StatuRecover.__init__(self)
-        scene = bpy.data.scenes[0]
+        scene = bpy.context.scene
         render = scene.render
         attrs = dict(file_format="PNG", compression=15)
         self.set_attrs(render.image_settings, attrs)
 
 
-def render_image():
-    render = bpy.data.scenes[0].render
+def render_image(cam=None):
+    cam = get_cam(cam)
+    scene = bpy.context.scene
+    render = scene.render
     png_path = tempfile.NamedTemporaryFile().name + ".png"
-    with set_image_render(), withattr(render, "filepath", png_path):
+    with set_image_render(), withattr(scene, "camera", cam), withattr(
+        render, "filepath", png_path
+    ):
         print("Render image using:", render.engine)
         bpy.ops.render.render(write_still=True)
     image = imread(png_path)[..., :3]
@@ -97,7 +102,7 @@ befor_render_data_hooks = OrderedDict()
 
 # @undo()
 def render_data(render_image=True, render_annotation=True):
-    scene = bpy.data.scenes[0]
+    scene = bpy.context.scene
     render = scene.render
     for hook_name, hook in befor_render_data_hooks.items():
         print(f"Run befor_render_data_hooks[{hook_name}]")
