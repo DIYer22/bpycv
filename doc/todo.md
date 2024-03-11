@@ -8,6 +8,8 @@
 - [ ] demo for build_tex and hdri
 - [ ] better instance map: which consider displacement
     - [ ] better instance map: by pass.object_index and compositing
+    - https://github.com/DIYer22/bpycv/issues/27
+    - https://cgcooke.github.io/Blog/computer%20vision/blender/2020/10/23/Synthetic-Training-Data-With-Blender.html
 - [ ] a better 6d pose format
 - [ ] visualize 3d bounding box of 6DoF GT(How to set xyzs)
 - [ ] answer first result of google: "blender depth python"
