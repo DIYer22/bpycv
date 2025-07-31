@@ -24,7 +24,7 @@
 **News:** [We win 🥈2nd place in IROS 2020 Open Cloud Robot Table Organization Challenge (OCRTOC)](https://github.com/DIYer22/bpycv/issues/15)
 
 ## ▮ Install
-`bpycv` support Blender 2.9, 3.0, 3.1+
+`bpycv` support Blender 2.9, 3.x, 4.x
 
 1. Download and install Blender [here](https://www.blender.org/download/).
 
@@ -88,6 +88,7 @@ cv2.imwrite("demo-depth.png", np.uint16(depth_in_mm))  # save as 16bit png
 
 # visualization instance mask, RGB, depth for human
 cv2.imwrite("demo-vis(inst_rgb_depth).jpg", result.vis()[..., ::-1])
+print(f"Saving vis image to: 'demo-vis(inst_rgb_depth).jpg'")
 ```
 Open `./demo-vis(inst_rgb_depth).jpg`:   
 

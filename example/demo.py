@@ -49,3 +49,4 @@ cv2.imwrite("demo-depth.png", np.uint16(depth_in_mm))  # save as 16bit png
 
 # visualization inst_rgb_depth for human
 cv2.imwrite("demo-vis(inst_rgb_depth).jpg", result.vis()[..., ::-1])
+print(f"Saving vis image to: 'demo-vis(inst_rgb_depth).jpg'")
