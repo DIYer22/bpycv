@@ -53,6 +53,9 @@ class set_annotation_render(StatuRecover):
         elif render.engine == "CYCLES":
             self.set_attr(render, "engine", "CYCLES")
             self.set_attr(scene.cycles, "samples", 1)
+            # Set fewer samples for faster testing
+            if hasattr(scene.cycles, 'preview_samples'):
+                self.set_attr(scene.cycles, "preview_samples", 1)
             self.set_attr(bpy.context.view_layer.cycles, "use_denoising", False)
         self.set_attr(render, "film_transparent", True)
         self.set_attr(scene.render, "use_motion_blur", False)
@@ -62,12 +65,11 @@ class set_annotation_render(StatuRecover):
         # self.set_attr(scene.render, "tile_y", 256)
 
         attrs = dict(
-            file_format="OPEN_EXR",
+            file_format="OPEN_EXR_MULTILAYER",
             compression=0,
             color_mode="RGBA",
             color_depth="32",
             exr_codec="NONE",
-            use_zbuffer=True,
         )
         self.set_attrs(render.image_settings, attrs)
         self.set_attrs(bpy.context.view_layer, dict(use_pass_z=True))

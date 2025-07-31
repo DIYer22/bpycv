@@ -28,12 +28,13 @@ def load_obj(filepath):
 
     """
     ext = filepath[filepath.rindex(".") + 1 :]
+    # Use the new Blender 4.x import operators
     ext_to_import_func = {
-        "stl": bpy.ops.import_mesh.stl,
-        "obj": bpy.ops.import_scene.obj,
+        "stl": bpy.ops.wm.stl_import,
+        "obj": bpy.ops.wm.obj_import,
         "dae": bpy.ops.wm.collada_import,
-        "ply": bpy.ops.import_mesh.ply,
-        "fbx": bpy.ops.import_scene.fbx,
+        "ply": bpy.ops.wm.ply_import,
+        "fbx": bpy.ops.wm.fbx_import,
     }
     import_func = ext_to_import_func[ext]
     import_func(filepath=filepath)

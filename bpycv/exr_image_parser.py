@@ -105,13 +105,64 @@ class ExrImage:
         self.K = K
 
     def get_rgb(self):
-        return self.reader.select(["R", "G", "B"]).copy()
+        # Try different possible RGB channel names for multilayer EXR compatibility
+        rgb_prefixes = ["ViewLayer.Combined.", "RenderLayer.Combined.", "Combined.", ""]
+        for prefix in rgb_prefixes:
+            channels = [f"{prefix}R", f"{prefix}G", f"{prefix}B"]
+            if all(ch in self.reader.channel_map for ch in channels):
+                return self.reader.select(channels).copy()
+        
+        # Fallback to basic RGB if available
+        if all(ch in self.reader.channel_map for ch in ["R", "G", "B"]):
+            return self.reader.select(["R", "G", "B"]).copy()
+        
+        print(f"Warning: No RGB channels found. Available channels: {self.reader.channel_names}")
+        h, w = self.reader.shape[0], self.reader.shape[2]
+        return np.zeros((h, 3, w), dtype=np.float32)
 
     def get_rgba(self):
-        return self.reader.select(["R", "G", "B", "A"]).copy()
+        # Try different possible RGBA channel names for multilayer EXR compatibility  
+        rgba_prefixes = ["ViewLayer.Combined.", "RenderLayer.Combined.", "Combined.", ""]
+        for prefix in rgba_prefixes:
+            channels = [f"{prefix}R", f"{prefix}G", f"{prefix}B", f"{prefix}A"]
+            if all(ch in self.reader.channel_map for ch in channels):
+                return self.reader.select(channels).copy()
+        
+        # Fallback to basic RGBA if available
+        if all(ch in self.reader.channel_map for ch in ["R", "G", "B", "A"]):
+            return self.reader.select(["R", "G", "B", "A"]).copy()
+            
+        print(f"Warning: No RGBA channels found. Available channels: {self.reader.channel_names}")
+        h, w = self.reader.shape[0], self.reader.shape[2]
+        return np.zeros((h, 4, w), dtype=np.float32)
 
     def get_raw_depth(self):
-        raw_depth = self.reader.select(["Z"]).copy().squeeze()
+        # Try different possible depth channel names for compatibility with different Blender versions
+        # In Blender 4.5 multilayer EXR, depth is typically "ViewLayer.Depth.Z" or similar
+        possible_depth_channels = [
+            "ViewLayer.Depth.Z", 
+            "ViewLayer.Z", 
+            "Depth.Z",
+            "Z",
+            "Depth",
+            "RenderLayer.Depth.Z",
+            "RenderLayer.Z"
+        ]
+        depth_channel = None
+        
+        for channel in possible_depth_channels:
+            if channel in self.reader.channel_map:
+                depth_channel = channel
+                break
+        
+        if depth_channel is None:
+            print(f"Warning: No depth channel found. Available channels: {self.reader.channel_names}")
+            print(f"Channel map: {self.reader.channel_map}")
+            # Return a dummy depth array with zeros
+            h, w = self.reader.shape[0], self.reader.shape[2]
+            return np.zeros((h, w), dtype=np.float32)
+        
+        raw_depth = self.reader.select([depth_channel]).copy().squeeze()
         if self.by_cycles:
             raw_depth = depth_of_point_to_depth(raw_depth, self.K)
         return raw_depth
