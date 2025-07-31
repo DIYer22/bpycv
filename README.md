@@ -21,7 +21,10 @@
     - No complicated packaging
     - Use of Blender's native API and calling methods
 
-**News:** [We win 🥈2nd place in IROS 2020 Open Cloud Robot Table Organization Challenge (OCRTOC)](https://github.com/DIYer22/bpycv/issues/15)
+**Our Projects that rely on `bpycv`:** 
+- 🔬 Research: [Building Five Irregular Shape Instance Segmentation Datasets](https://github.com/iShape/build_synthetic_ishape)
+- 🎮 Demo: [3D Reconstruction + Blender Data Synthesis + AutoML == Free  Detection and Segmentation Model](https://www.youtube.com/watch?v=qTKNQu30rhM)
+- 🥈 Achievement: [We win 2nd place in IROS 2020 Open Cloud Robot Table Organization Challenge (OCRTOC)](https://github.com/DIYer22/bpycv/issues/15)
 
 ## ▮ Install
 `bpycv` support Blender 2.9, 3.x, 4.x
