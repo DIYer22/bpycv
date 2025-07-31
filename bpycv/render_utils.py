@@ -45,11 +45,14 @@ class set_annotation_render(StatuRecover):
         render = scene.render
         if render.engine == "BLENDER_WORKBENCH":
             self.set_attr(render, "engine", "CYCLES")
-        if render.engine == "BLENDER_EEVEE":
+        if render.engine in ["BLENDER_EEVEE"]:
             # When enviroment not support GUI, Eevee will raise Exception("Unable to open a display")  (@Blender 2.81)
             self.set_attr(render, "engine", "BLENDER_EEVEE")
             self.set_attr(scene.eevee, "taa_render_samples", 1)
             self.set_attr(scene.eevee, "use_bloom", False)
+        elif render.engine == "BLENDER_EEVEE_NEXT":
+            self.set_attr(render, "engine", "BLENDER_EEVEE_NEXT")
+            self.set_attr(scene.eevee, "taa_render_samples", 1)
         elif render.engine == "CYCLES":
             self.set_attr(render, "engine", "CYCLES")
             self.set_attr(scene.cycles, "samples", 1)
