@@ -35,6 +35,7 @@
 
 ```bash
 # For Windows user: ensure powershell has administrator permission
+# For MacOS user: replace ./blender to /Applications/Blender.app/Contents/MacOS/Blender
 
 # Ensure pip: equl to /blender-path/3.xx/python/bin/python3.10 -m ensurepip
 ./blender -b --python-expr "from subprocess import sys,call;call([sys.executable,'-m','ensurepip'])"
